@@ -29,6 +29,7 @@ public class ArrayBag<T extends Comparable> extends AbstractBag<T>
   }
 
   private int maxSize;
+
   private ArrayList<Element<T>> contents;
 
   public ArrayBag() throws BagException
