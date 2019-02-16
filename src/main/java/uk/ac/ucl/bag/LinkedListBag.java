@@ -1,5 +1,7 @@
 package uk.ac.ucl.bag;
 
+import java.util.Iterator;
+
 public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
 
     private static class Element<E> {
@@ -83,8 +85,109 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
     }
 
     public void remove(T value){
-
+        Element<T> preElement = null;
+        Element<T> curElement = head;
+        if(curElement != null){
+            while(curElement.next != null){
+                if(curElement.value == value){
+                    curElement.occurrences--;
+                }
+                if(curElement.occurrences == 0){
+                    if(curElement == head){
+                        head = curElement.next;
+                    }
+                    else{
+                        preElement.next = curElement.next;
+                    }
+                }
+                preElement = curElement;
+                curElement = curElement.next;
+            }
+        }
     }
 
+    public boolean isEmpty(){
+        return head==null;
+    }
 
+    public int size(){
+        int count = 0;
+        Element<T> curElement = head;
+        if(curElement != null){
+            if(curElement.next == null){
+                count++;
+            }
+            while(curElement.next != null){
+                count++;
+                curElement = curElement.next;
+            }
+        }
+        return count;
+    }
+
+    private class ArrayBagUniqueIterator implements Iterator<T>{
+        private Element<T> curElement = null;
+        public boolean hasNext(){
+            if(curElement == null){
+                return false;
+            }
+            if(curElement.next == null){
+                return false;
+            }
+            return true;
+        }
+        public T next(){
+            if(curElement == null){
+                if(head == null){
+                    return null;
+                }
+                curElement = head;
+                return curElement.value;
+            }
+            curElement = curElement.next;
+            return curElement.value;
+        }
+    }
+
+    public Iterator<T> iterator(){
+        return new ArrayBagUniqueIterator();
+    }
+
+    private class ArrayBagIterator implements Iterator<T>{
+        private Element<T> curElement = null;
+        private int count = 0;
+        public boolean hasNext(){
+            if(curElement == null){
+                return false;
+            }
+            if(curElement.next == null){
+                if(count == curElement.occurrences) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        public T next(){
+            if(curElement == null){
+                if(head == null){
+                    return null;
+                }
+                curElement = head;
+                count = 1;
+                return curElement.value;
+            }
+            if(count < curElement.occurrences){
+                count++;
+                return curElement.value;
+            }
+            curElement = curElement.next;
+            count = 1;
+            return curElement.value;
+        }
+    }
+
+    @Override
+    public Iterator<T> allOccurrencesIterator() {
+        return new ArrayBagIterator();
+    }
 }
