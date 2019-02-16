@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
 
-    private static class Element<E> {
+    private static class Element<E extends Comparable> {
         public E value;
         public int occurrences;
         public Element<E> next;
@@ -34,25 +34,25 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
 
     public void add(T value) throws BagException{
         if(head == null){
-            head = new Element(value, 1, null);
+            head = new Element<>(value, 1, null);
+            curSize++;
+            return;
+        }
+        Element<T> existence = find(value);
+        if(existence != null){
+            existence.occurrences++;
+            return;
+        }
+        if(curSize < maxSize) {
+            Element<T> curElement = head;
+            while(curElement.next != null){
+                curElement = curElement.next;
+            }
+            curElement.next = new Element<>(value, 1, null);
             curSize++;
         }
         else{
-            Element<T> curElement = head.next;
-            while(curElement.next != null){
-                if(curElement.value == value){
-                    curElement.occurrences++;
-                    return;
-                }
-                curElement = curElement.next;
-            }
-            if(curSize < maxSize) {
-                curElement.next = new Element<T>(value, 1, null);
-                curSize++;
-            }
-            else{
-                throw new BagException("Bag is full");
-            }
+            throw new BagException("Bag is full");
         }
     }
 
@@ -64,13 +64,11 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
 
     private Element<T> find(T value){
         Element<T> curElement = head;
-        if(curElement != null){
-            while(curElement.next != null){
-                if(curElement.value == value){
-                    return curElement;
-                }
-                curElement = curElement.next;
+        while(curElement != null){
+            if(curElement.value.compareTo(value) == 0){
+                return curElement;
             }
+            curElement = curElement.next;
         }
         return null;
     }
@@ -81,6 +79,7 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
 
     public int countOf(T value){
         Element<T> foundElement = find(value);
+        if(foundElement == null) return 0;
         return foundElement.occurrences;
     }
 
@@ -89,7 +88,7 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
         Element<T> curElement = head;
         if(curElement != null){
             while(curElement.next != null){
-                if(curElement.value == value){
+                if(curElement.value.compareTo(value) == 0){
                     curElement.occurrences--;
                 }
                 if(curElement.occurrences == 0){
@@ -111,22 +110,11 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
     }
 
     public int size(){
-        int count = 0;
-        Element<T> curElement = head;
-        if(curElement != null){
-            if(curElement.next == null){
-                count++;
-            }
-            while(curElement.next != null){
-                count++;
-                curElement = curElement.next;
-            }
-        }
-        return count;
+        return curSize;
     }
 
     private class ArrayBagUniqueIterator implements Iterator<T>{
-        private Element<T> curElement = null;
+        private Element<T> curElement = head;
         public boolean hasNext(){
             if(curElement == null){
                 return false;
@@ -154,7 +142,7 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
     }
 
     private class ArrayBagIterator implements Iterator<T>{
-        private Element<T> curElement = null;
+        private Element<T> curElement = head;
         private int count = 0;
         public boolean hasNext(){
             if(curElement == null){
