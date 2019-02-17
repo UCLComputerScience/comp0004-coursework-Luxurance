@@ -37,4 +37,21 @@ public abstract class AbstractBag<T extends Comparable> implements Bag<T>
     return result;
   }
 
+    @Override
+    public String toString() {
+        String result = "";
+        result = result + "[";
+        boolean first = true;
+        for(T value : this){
+            if(!first){
+                result = result + ", ";
+            }
+            first = false;
+            result += value;
+            result += ": ";
+            result += this.countOf(value);
+        }
+        result += "]";
+        return result;
+    }
 }
