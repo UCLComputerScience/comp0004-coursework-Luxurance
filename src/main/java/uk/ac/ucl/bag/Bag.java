@@ -109,6 +109,8 @@ public interface Bag<T extends Comparable> extends Iterable<T>
 
   void removeAllCopies();
 
+  Bag<T> subtract(Bag<T> bag);
+
   /*
   This method declaration is inherited from interface Iterator, so not redeclared here.
   Included here as a reminder that this method is part of the Bag interface.

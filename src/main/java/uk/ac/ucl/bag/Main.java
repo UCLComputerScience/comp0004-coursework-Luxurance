@@ -58,6 +58,7 @@ public class Main
       System.out.print("bag1 all:                    ");
       printAll(bag1);
       System.out.println(bag1.toString());
+      System.out.println(bag1.getClass().toString());
 
       bag2 = factory.getBag();
       bag2.add("def");

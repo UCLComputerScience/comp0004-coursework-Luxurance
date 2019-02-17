@@ -7,6 +7,7 @@ package uk.ac.ucl.bag;
  * New bag objects are created using a BagFactory, which can be configured in the application
  * setup to select which bag implementation is to be used.
  */
+import java.lang.invoke.ClassSpecializer;
 import java.util.Iterator;
 
 public abstract class AbstractBag<T extends Comparable> implements Bag<T>
@@ -63,5 +64,19 @@ public abstract class AbstractBag<T extends Comparable> implements Bag<T>
                 System.out.println(value);
             }
         }
+    }
+
+    public Bag<T> subtract(Bag<T> bag) {
+      BagFactory<T> factory = BagFactory.getInstance();
+      String classString = bag.getClass().toString();
+      String className = "";
+      for(int i = classString.length() - 1; i >= 0; i--){
+          if(Character.toString(classString.charAt(i)).equals(".")){
+              break;
+          }
+          className = classString.charAt(i) + className;
+      }
+      factory.setBagClass(className);
+      Bag<T> newBag = factory.getBag();
     }
 }
