@@ -87,7 +87,7 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
         Element<T> preElement = null;
         Element<T> curElement = head;
         if(curElement != null){
-            while(curElement.next != null){
+            while(curElement != null){
                 if(curElement.value.compareTo(value) == 0){
                     curElement.occurrences--;
                 }

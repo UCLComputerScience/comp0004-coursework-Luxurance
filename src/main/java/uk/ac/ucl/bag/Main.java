@@ -74,15 +74,16 @@ public class Main
       bag3.addWithOccurrences("xyz", 5);
       bag3.add("opq");
       bag3.addWithOccurrences("123", 3);
+//      bag3.removeAllCopies();
       System.out.print("bag3 all unique:             ");
       print(bag3);
       System.out.print("bag3 all:                    ");
       printAll(bag3);
       System.out.println(bag3.toString());
 
-
       System.out.print("createMergedAllOccurrences:  ");
       Bag<String> bag4 = bag1.createMergedAllOccurrences(bag3);
+//      bag4.removeAllCopies();
       printAll(bag4);
       System.out.println(bag4.toString());
 

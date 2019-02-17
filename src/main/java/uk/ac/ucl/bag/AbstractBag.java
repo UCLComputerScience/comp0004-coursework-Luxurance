@@ -54,4 +54,14 @@ public abstract class AbstractBag<T extends Comparable> implements Bag<T>
         result += "]";
         return result;
     }
+
+    public void removeAllCopies() {
+        for(T value : this){
+            while(countOf(value) != 1){
+                remove(value);
+                System.out.println(countOf(value));
+                System.out.println(value);
+            }
+        }
+    }
 }
