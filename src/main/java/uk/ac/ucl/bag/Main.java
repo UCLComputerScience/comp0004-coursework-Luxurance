@@ -92,6 +92,13 @@ public class Main
       Bag<String> bag5 = bag1.createMergedAllUnique(bag3);
       print(bag5);
       System.out.println(bag5.toString());
+
+      Bag<String> bag6 = bag4.subtract(bag1); //bag6 = bag4 \ bag1
+      System.out.print("bag6 all unique:             ");
+      print(bag6);
+      System.out.print("bag6 all:                    ");
+      printAll(bag6);
+      System.out.println(bag3.toString());
     }
     catch (BagException e)
     {
