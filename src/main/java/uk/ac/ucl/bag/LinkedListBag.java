@@ -114,10 +114,10 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
     }
 
     private class ArrayBagUniqueIterator implements Iterator<T>{
-        private Element<T> curElement = head;
+        private Element<T> curElement = null;
         public boolean hasNext(){
             if(curElement == null){
-                return false;
+                return head!=null;
             }
             if(curElement.next == null){
                 return false;
@@ -126,14 +126,17 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
         }
         public T next(){
             if(curElement == null){
-                if(head == null){
+                if(head==null){
                     return null;
                 }
                 curElement = head;
+                return head.value;
+            }
+            if(curElement.next != null){
+                curElement = curElement.next;
                 return curElement.value;
             }
-            curElement = curElement.next;
-            return curElement.value;
+            return null;
         }
     }
 
@@ -142,11 +145,11 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
     }
 
     private class ArrayBagIterator implements Iterator<T>{
-        private Element<T> curElement = head;
+        private Element<T> curElement = null;
         private int count = 0;
         public boolean hasNext(){
             if(curElement == null){
-                return false;
+                return head!=null;
             }
             if(curElement.next == null){
                 if(count == curElement.occurrences) {
@@ -168,9 +171,12 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
                 count++;
                 return curElement.value;
             }
-            curElement = curElement.next;
-            count = 1;
-            return curElement.value;
+            if(curElement.next != null) {
+                curElement = curElement.next;
+                count = 1;
+                return curElement.value;
+            }
+            return null;
         }
     }
 

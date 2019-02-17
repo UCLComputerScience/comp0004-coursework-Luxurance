@@ -12,7 +12,7 @@ public class Main
   public void print(Bag<String> bag)
   {
     boolean first = true;
-    System.out.println(bag.size());
+//    System.out.println(bag.size()); //test
     System.out.print("{");
     for (String value : bag)
     {
@@ -21,12 +21,6 @@ public class Main
       System.out.print(value);
     }
     System.out.println("}");
-
-//    Iterator<String> values = bag.iterator();
-//    while(values.hasNext()){
-//      System.out.println("here");
-//      System.out.println(values.next());
-//    }
   }
 
   public void printAll(Bag<String> bag)
