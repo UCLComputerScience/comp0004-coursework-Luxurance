@@ -78,8 +78,16 @@ public abstract class AbstractBag<T extends Comparable> implements Bag<T>
       factory.setBagClass(className);
       Bag<T> newBag = factory.getBag();
       for(T value : this){
-          if(!bag.contains(value)){
-              newBag.addWithOccurrences(value,countOf(value));
+          newBag.addWithOccurrences(value,countOf(value));
+      }
+      for(T value : newBag){
+          if(bag.contains(value)){
+              for(int i = 0; i < bag.countOf(value); i++){
+                  newBag.remove(value);
+                  if(!newBag.contains(value)){
+                      break;
+                  }
+              }
           }
       }
       return newBag;

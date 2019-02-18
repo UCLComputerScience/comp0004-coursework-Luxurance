@@ -53,6 +53,7 @@ public class Main
       bag1.add("abc");
       bag1.add("def");
       bag1.add("hij");
+      bag1.addWithOccurrences("xyz",2);
       System.out.print("bag1 all unique:             ");
       print(bag1);
       System.out.print("bag1 all:                    ");
