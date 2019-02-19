@@ -94,7 +94,7 @@ public class Main
       print(bag5);
       System.out.println(bag5.toString());
 
-      Bag<String> bag6 = bag4.subtract(bag1); //bag6 = bag4 \ bag1
+      Bag<String> bag6 = bag4.subtract(bag1); //bag6 = bag4 \ bag1  **should equal bag3
       System.out.print("bag6 all unique:             ");
       print(bag6);
       System.out.print("bag6 all:                    ");
