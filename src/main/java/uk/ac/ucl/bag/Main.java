@@ -1,6 +1,9 @@
 package uk.ac.ucl.bag;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Example code illustrating the use of Bag objects.
@@ -8,6 +11,10 @@ import java.util.Iterator;
 public class Main
 {
   private BagFactory<String> factory = BagFactory.getInstance();
+
+  private File file = new File("/Users/Lance 1 2/IdeaProjects/cwBag/comp0004-coursework-Luxurance/src/main/java/uk/ac/ucl/bag/bagData.txt");
+
+  private List bagList = new ArrayList<>();
 
   public void print(Bag<String> bag)
   {
@@ -37,6 +44,8 @@ public class Main
     System.out.println("}");
   }
 
+
+
   public void go()
   {
 //    factory.setBagClass("ArrayBag");
@@ -59,7 +68,7 @@ public class Main
       System.out.print("bag1 all:                    ");
       printAll(bag1);
       System.out.println(bag1.toString());
-      System.out.println(bag1.getClass().toString());
+      bagList.add(bag1);
 
       bag2 = factory.getBag();
       bag2.add("def");
@@ -71,6 +80,7 @@ public class Main
       System.out.print("bag2 all:                    ");
       printAll(bag2);
       System.out.println(bag2.toString());
+      bagList.add(bag2);
 
       bag3 = factory.getBag();
       bag3.addWithOccurrences("xyz", 5);
@@ -82,17 +92,20 @@ public class Main
       System.out.print("bag3 all:                    ");
       printAll(bag3);
       System.out.println(bag3.toString());
+      bagList.add(bag3);
 
       System.out.print("createMergedAllOccurrences:  ");
       Bag<String> bag4 = bag1.createMergedAllOccurrences(bag3);
 //      bag4.removeAllCopies();
       printAll(bag4);
       System.out.println(bag4.toString());
+      bagList.add(bag4);
 
       System.out.print("createMergedAllUnique:       ");
       Bag<String> bag5 = bag1.createMergedAllUnique(bag3);
       print(bag5);
       System.out.println(bag5.toString());
+      bagList.add(bag5);
 
       Bag<String> bag6 = bag4.subtract(bag1); //bag6 = bag4 \ bag1  **should equal bag3
       System.out.print("bag6 all unique:             ");
@@ -100,6 +113,9 @@ public class Main
       System.out.print("bag6 all:                    ");
       printAll(bag6);
       System.out.println(bag3.toString());
+      bagList.add(bag6);
+
+      new BagSaver(file,bagList).saveBag();
     }
     catch (BagException e)
     {
