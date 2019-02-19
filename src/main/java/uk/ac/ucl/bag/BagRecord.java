@@ -1,7 +1,5 @@
 package uk.ac.ucl.bag;
 
-import java.util.StringTokenizer;
-
 public class BagRecord<T extends Comparable> {
 
     private T value;
