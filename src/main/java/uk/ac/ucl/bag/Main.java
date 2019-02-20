@@ -109,6 +109,9 @@ public class Main
       bag4 = bagList.get(3);
 //      Bag<String> bag4 = bag1.createMergedAllOccurrences(bag3);
 //      bag4.removeAllCopies();
+      System.out.print("bag4 all unique:             ");
+      print(bag4);
+      System.out.print("bag4 all:                    ");
       printAll(bag4);
       System.out.println(bag4.toString());
 

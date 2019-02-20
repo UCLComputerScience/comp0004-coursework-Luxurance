@@ -65,26 +65,32 @@ public abstract class AbstractBag<T extends Comparable> implements Bag<T>
         }
     }
 
-    public Bag<T> subtract(Bag<T> bag) throws BagException{
-      BagFactory<T> factory = BagFactory.getInstance();
-      String classString = bag.getClass().toString();
-      ClassHandler classHandler = new ClassHandler();
-      String className = classHandler.getClassString(classString);
-      factory.setBagClass(className);
-      Bag<T> newBag = factory.getBag();
-      for(T value : this){
-          newBag.addWithOccurrences(value,countOf(value));
-      }
-      for(T value : newBag){
-          if(bag.contains(value)){
-              for(int i = 0; i < bag.countOf(value); i++){
-                  newBag.remove(value);
-                  if(!newBag.contains(value)){
-                      break;
-                  }
-              }
-          }
-      }
-      return newBag;
+    public Bag<T> subtract(Bag<T> bag) throws BagException {
+        try {
+            BagFactory<T> factory = BagFactory.getInstance();
+            String classString = bag.getClass().toString();
+            ClassHandler classHandler = new ClassHandler();
+            String className = classHandler.getClassString(classString);
+            factory.setBagClass(className);
+            Bag<T> newBag = factory.getBag();
+            for (T value : this) {
+                newBag.addWithOccurrences(value, countOf(value));
+            }
+            for (T value : newBag) {
+                if (bag.contains(value)) {
+                    for (int i = 0; i < bag.countOf(value); i++) {
+                        newBag.remove(value);
+                        if (!newBag.contains(value)) {
+                            break;
+                        }
+                    }
+                }
+            }
+            return newBag;
+        }
+        catch(ClassCastException a){
+            System.out.println("Subtracting bag with different contents type gives the origin");
+            return this;
+        }
     }
 }
