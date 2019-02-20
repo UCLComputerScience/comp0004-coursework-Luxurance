@@ -68,13 +68,8 @@ public abstract class AbstractBag<T extends Comparable> implements Bag<T>
     public Bag<T> subtract(Bag<T> bag) throws BagException{
       BagFactory<T> factory = BagFactory.getInstance();
       String classString = bag.getClass().toString();
-      String className = "";
-      for(int i = classString.length() - 1; i >= 0; i--){
-          if(Character.toString(classString.charAt(i)).equals(".")){
-              break;
-          }
-          className = classString.charAt(i) + className;
-      }
+      ClassHandler classHandler = new ClassHandler();
+      String className = classHandler.getClassString(classString);
       factory.setBagClass(className);
       Bag<T> newBag = factory.getBag();
       for(T value : this){

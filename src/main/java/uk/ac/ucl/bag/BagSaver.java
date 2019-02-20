@@ -9,6 +9,8 @@ public class BagSaver<T extends Comparable> {
 
     private List<Bag<T>> bagList;
 
+    private ClassHandler classHandler = new ClassHandler();
+
     public BagSaver(File file, List bagList){
         this.file = file;
         this.bagList = bagList;
@@ -18,7 +20,12 @@ public class BagSaver<T extends Comparable> {
         try {
             PrintWriter out = new PrintWriter(new FileWriter(file));
             for (Bag<T> curBag : bagList) {
+                boolean first = true;
                 for (T value : curBag) {
+                    if(first) {
+                        out.write( classHandler.getClassString(value.getClass().toString())+" ");
+                    }
+                    first = false;
                     out.write(value.toString() + " ");
                     out.write(curBag.countOf(value) + " ");
                 }

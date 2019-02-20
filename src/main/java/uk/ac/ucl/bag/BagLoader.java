@@ -10,8 +10,11 @@ public class BagLoader<T extends Comparable> {
 
     private List<Bag<T>> bagList;
 
-    public BagLoader(File file){
+    private ClassHandler classHandler = new ClassHandler();
+
+    public BagLoader(File file,List bagList){
         this.file = file;
+        this.bagList = bagList;
     }
 
     public void loadBag(BagFactory factory) throws BagException{
@@ -21,9 +24,18 @@ public class BagLoader<T extends Comparable> {
             while(line != null){
                 Bag newBag = factory.getBag();
                 StringTokenizer tokenizer = new StringTokenizer(line);
+                String classString = "";
+                boolean first = true;
                 while(tokenizer.hasMoreTokens()){
-                    T value = tokenizer.nextToken().;
+                    if(first) classString = tokenizer.nextToken();
+                    first = false;
+//                    System.out.println(tokenizer.nextToken());
+                    T value = classHandler.convertType(tokenizer.nextToken(),classString);
+                    int occurrences = Integer.valueOf(tokenizer.nextToken());
+                    newBag.addWithOccurrences(value,occurrences);
                 }
+                bagList.add(newBag);
+                line = in.readLine();
             }
         }
         catch(IOException a){
@@ -32,4 +44,10 @@ public class BagLoader<T extends Comparable> {
             System.exit(1);
         }
     }
+
+//    public List getBagList(){
+//        return bagList;
+//    }
+
+
 }

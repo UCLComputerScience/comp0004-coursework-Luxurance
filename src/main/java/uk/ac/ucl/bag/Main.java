@@ -10,18 +10,22 @@ import java.util.List;
  */
 public class Main
 {
-  private BagFactory<String> factory = BagFactory.getInstance();
+  private BagFactory factory = BagFactory.getInstance();
 
   private File file = new File("/Users/Lance 1 2/IdeaProjects/cwBag/comp0004-coursework-Luxurance/src/main/java/uk/ac/ucl/bag/bagData.txt");
 
   private List bagList = new ArrayList<>();
 
-  public void print(Bag<String> bag)
+  private BagLoader bagLoader = new BagLoader(file,bagList);
+
+  private BagSaver bagSaver = new BagSaver(file,bagList);
+
+  public <T extends Comparable> void print(Bag<T> bag)
   {
     boolean first = true;
 //    System.out.println(bag.size()); //test
     System.out.print("{");
-    for (String value : bag)
+    for (T value : bag)
     {
       if (!first) { System.out.print(" , "); }
       first = false;
@@ -30,11 +34,11 @@ public class Main
     System.out.println("}");
   }
 
-  public void printAll(Bag<String> bag)
+  public <T extends Comparable> void printAll(Bag<T> bag)
   {
     boolean first = true;
     System.out.print("{");
-    Iterator<String> allIterator = bag.allOccurrencesIterator();
+    Iterator<T> allIterator = bag.allOccurrencesIterator();
     while (allIterator.hasNext())
     {
       if (!first) { System.out.print(" , "); }
@@ -52,11 +56,16 @@ public class Main
 //    factory.setBagClass("MapBag");
     factory.setBagClass("LinkedListBag");
 
+//    factoryInt.setBagClass("MapBag");
+
     try
     {
+      bagLoader.loadBag(factory);
+
       Bag<String> bag1;
       Bag<String> bag2;
       Bag<String> bag3;
+      Bag<Integer> bag7;
 
       bag1 = factory.getBag();
       bag1.add("abc");
@@ -107,15 +116,25 @@ public class Main
       System.out.println(bag5.toString());
       bagList.add(bag5);
 
-      Bag<String> bag6 = bag4.subtract(bag1); //bag6 = bag4 \ bag1  **should equal bag3
-      System.out.print("bag6 all unique:             ");
-      print(bag6);
-      System.out.print("bag6 all:                    ");
-      printAll(bag6);
-      System.out.println(bag3.toString());
-      bagList.add(bag6);
+//      Bag<String> bag6 = bag4.subtract(bag1); //bag6 = bag4 \ bag1  **should equal bag3
+//      System.out.print("bag6 all unique:             ");
+//      print(bag6);
+//      System.out.print("bag6 all:                    ");
+//      printAll(bag6);
+//      System.out.println(bag3.toString());
+//      bagList.add(bag6);
 
-      new BagSaver(file,bagList).saveBag();
+      bag7 = factory.getBag();
+      bag7.addWithOccurrences(123,3);
+      bag7.addWithOccurrences(456,2);
+      bag7.addWithOccurrences(789,1);
+      System.out.print("bag7 all unique:             ");
+      print(bag7);
+      System.out.print("bag7 all:                    ");
+      printAll(bag7);
+      bagList.add(bag7);
+
+      bagSaver.saveBag();
     }
     catch (BagException e)
     {
