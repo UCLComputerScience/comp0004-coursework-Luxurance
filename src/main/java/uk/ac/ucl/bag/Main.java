@@ -14,7 +14,7 @@ public class Main
 
   private File file = new File("/Users/Lance 1 2/IdeaProjects/cwBag/comp0004-coursework-Luxurance/src/main/java/uk/ac/ucl/bag/bagData.txt");
 
-  private List bagList = new ArrayList<>();
+  private List<Bag> bagList = new ArrayList<>();
 
   private BagLoader bagLoader = new BagLoader(file,bagList);
 
@@ -62,77 +62,79 @@ public class Main
     {
       bagLoader.loadBag(factory);
 
-      Bag<String> bag1;
-      Bag<String> bag2;
-      Bag<String> bag3;
-      Bag<Integer> bag7;
+      Bag bag1;
+      Bag bag2;
+      Bag bag3;
+      Bag bag4;
+      Bag bag5;
+      Bag bag6;
+      Bag bag7;
 
-      bag1 = factory.getBag();
-      bag1.add("abc");
-      bag1.add("def");
-      bag1.add("hij");
-      bag1.addWithOccurrences("xyz",2);
+      bag1 = bagList.get(0);
+//      bag1 = factory.getBag();
+//      bag1.add("abc");
+//      bag1.add("def");
+//      bag1.add("hij");
+//      bag1.addWithOccurrences("xyz",2);
       System.out.print("bag1 all unique:             ");
       print(bag1);
       System.out.print("bag1 all:                    ");
       printAll(bag1);
       System.out.println(bag1.toString());
-      bagList.add(bag1);
 
-      bag2 = factory.getBag();
-      bag2.add("def");
-      bag2.add("def");
-      bag2.add("def");
-      bag2.add("klm");
+      bag2 = bagList.get(1);
+//      bag2 = factory.getBag();
+//      bag2.add("def");
+//      bag2.add("def");
+//      bag2.add("def");
+//      bag2.add("klm");
       System.out.print("bag2 all unique:             ");
       print(bag2);
       System.out.print("bag2 all:                    ");
       printAll(bag2);
       System.out.println(bag2.toString());
-      bagList.add(bag2);
 
-      bag3 = factory.getBag();
-      bag3.addWithOccurrences("xyz", 5);
-      bag3.add("opq");
-      bag3.addWithOccurrences("123", 3);
+      bag3 = bagList.get(2);
+//      bag3 = factory.getBag();
+//      bag3.addWithOccurrences("xyz", 5);
+//      bag3.add("opq");
+//      bag3.addWithOccurrences("123", 3);
 //      bag3.removeAllCopies();
       System.out.print("bag3 all unique:             ");
       print(bag3);
       System.out.print("bag3 all:                    ");
       printAll(bag3);
       System.out.println(bag3.toString());
-      bagList.add(bag3);
 
-      System.out.print("createMergedAllOccurrences:  ");
-      Bag<String> bag4 = bag1.createMergedAllOccurrences(bag3);
+      bag4 = bagList.get(3);
+//      Bag<String> bag4 = bag1.createMergedAllOccurrences(bag3);
 //      bag4.removeAllCopies();
       printAll(bag4);
       System.out.println(bag4.toString());
-      bagList.add(bag4);
 
+      bag5 = bagList.get(4);
       System.out.print("createMergedAllUnique:       ");
-      Bag<String> bag5 = bag1.createMergedAllUnique(bag3);
+//      Bag<String> bag5 = bag1.createMergedAllUnique(bag3);
       print(bag5);
       System.out.println(bag5.toString());
-      bagList.add(bag5);
 
-//      Bag<String> bag6 = bag4.subtract(bag1); //bag6 = bag4 \ bag1  **should equal bag3
-//      System.out.print("bag6 all unique:             ");
-//      print(bag6);
-//      System.out.print("bag6 all:                    ");
-//      printAll(bag6);
-//      System.out.println(bag3.toString());
-//      bagList.add(bag6);
+      bag6 = bag4.subtract(bag1); //bag6 = bag4 \ bag1  **should equal bag3 **bag6 is not saved in the file
+      System.out.print("bag6 all unique:             ");
+      print(bag6);
+      System.out.print("bag6 all:                    ");
+      printAll(bag6);
+      System.out.println(bag6.toString());
 
-      bag7 = factory.getBag();
-      bag7.addWithOccurrences(123,3);
-      bag7.addWithOccurrences(456,2);
-      bag7.addWithOccurrences(789,1);
+      bag7 = bagList.get(5);
+//      bag7 = factory.getBag();
+//      bag7.addWithOccurrences(123,3);
+//      bag7.addWithOccurrences(456,2);
+//      bag7.addWithOccurrences(789,1);
       System.out.print("bag7 all unique:             ");
       print(bag7);
       System.out.print("bag7 all:                    ");
       printAll(bag7);
-      bagList.add(bag7);
+      System.out.println(bag7.toString());
 
       bagSaver.saveBag();
     }
