@@ -149,7 +149,11 @@ public class Main
       List array2 = new ArrayList();
       array2.add("abc");
       array2.add("def");
-      bag8.addWithOccurrences(array2,2);
+      List array3 = new ArrayList();
+      array3.add("abc");
+      array3.add("def");
+      bag8.add(array2);
+      bag8.add(array3); //the compare method works if array2 and array3 are considered as the same
       System.out.print("bag8 all unique:             ");
       print(bag8);
       System.out.print("bag8 all:                    ");
