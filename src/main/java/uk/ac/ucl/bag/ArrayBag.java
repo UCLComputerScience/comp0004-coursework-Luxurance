@@ -1,12 +1,13 @@
 package uk.ac.ucl.bag;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.ArrayList;
 
 /*
    This class implements Bags using an ArrayList as the internal data structure.
  */
-public class ArrayBag<T extends Comparable> extends AbstractBag<T>
+public class ArrayBag<T> extends AbstractBag<T> implements Comparator<T>
 {
   /*
      Objects of class Element store a value and its occurrence count. This class is part of the
@@ -17,7 +18,7 @@ public class ArrayBag<T extends Comparable> extends AbstractBag<T>
      of class ArrayBag even though it is nested inside the class. This means that the type variable
      T is not in scope, so class Element has to be declared using a different type variable E.
    */
-  private static class Element<E extends Comparable>
+  private static class Element<E>
   {
     public int count;
     public E value;
@@ -26,6 +27,7 @@ public class ArrayBag<T extends Comparable> extends AbstractBag<T>
       this.count = count;
       this.value = value;
     }
+
   }
 
   private int maxSize;
@@ -53,9 +55,9 @@ public class ArrayBag<T extends Comparable> extends AbstractBag<T>
 
   public void add(T value) throws BagException
   {
-    for (Element element : contents)
+    for (Element<T> element : contents)
     {
-      if (element.value.compareTo(value) == 0) // Must use compareTo to compare values.
+      if (compare(element.value,value) == 0) // Must use compareTo to compare values.
       {
         element.count++;
         return;
@@ -81,9 +83,9 @@ public class ArrayBag<T extends Comparable> extends AbstractBag<T>
 
   public boolean contains(T value)
   {
-    for (Element element : contents)
+    for (Element<T> element : contents)
     {
-      if (element.value.compareTo(value) == 0)
+      if (compare(element.value,value) == 0)
       {
         return true;
       }
@@ -93,9 +95,9 @@ public class ArrayBag<T extends Comparable> extends AbstractBag<T>
 
   public int countOf(T value)
   {
-    for (Element element : contents)
+    for (Element<T> element : contents)
     {
-      if (element.value.compareTo(value) == 0)
+      if (compare(element.value,value) == 0)
       {
         return element.count;
       }
@@ -107,8 +109,8 @@ public class ArrayBag<T extends Comparable> extends AbstractBag<T>
   {
     for (int i = 0 ; i < contents.size() ; i++)
     {
-      Element element = contents.get(i);
-      if (element.value.compareTo(value) == 0)
+      Element<T> element = contents.get(i);
+      if (compare(element.value,value) == 0)
       {
         element.count--;
         if (element.count == 0)

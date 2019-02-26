@@ -5,7 +5,7 @@ package uk.ac.ucl.bag;
  * object can be created. The factory can be configured with the name of the bag class it creates instances
  * of.
  */
-public class BagFactory<T extends Comparable>
+public class BagFactory<T>
 {
   private static BagFactory factory = null;
 

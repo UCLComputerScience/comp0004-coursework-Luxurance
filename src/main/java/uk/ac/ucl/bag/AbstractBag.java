@@ -7,9 +7,10 @@ package uk.ac.ucl.bag;
  * New bag objects are created using a BagFactory, which can be configured in the application
  * setup to select which bag implementation is to be used.
  */
+import java.util.Comparator;
 import java.util.Iterator;
 
-public abstract class AbstractBag<T extends Comparable> implements Bag<T>
+public abstract class AbstractBag<T> implements Bag<T>,Comparator<T>
 {
   public Bag<T> createMergedAllOccurrences(Bag<T> b) throws BagException {
     Bag<T> result = BagFactory.getInstance().getBag();
@@ -89,8 +90,31 @@ public abstract class AbstractBag<T extends Comparable> implements Bag<T>
             return newBag;
         }
         catch(ClassCastException a){
-            System.out.println("Subtracting bag with different contents type gives the origin");
-            return this;
+            return this; //subtract a bag with contents of different type will give the origin bag
         }
+    }
+
+    @Override
+    public int compare(T o1, T o2) {
+      if(o1.equals(o2)){
+          return 0;
+      }
+      return 1;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Bag){
+            for(T value : this){
+                if(!((Bag) obj).contains(value)){
+                    return false;
+                }
+                if(((Bag) obj).countOf(value) != this.countOf(value)){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

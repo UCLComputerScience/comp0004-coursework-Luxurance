@@ -20,7 +20,7 @@ public class Main
 
   private BagSaver bagSaver = new BagSaver(file,bagList);
 
-  public <T extends Comparable> void print(Bag<T> bag)
+  public <T> void print(Bag<T> bag)
   {
     boolean first = true;
 //    System.out.println(bag.size()); //test
@@ -34,7 +34,7 @@ public class Main
     System.out.println("}");
   }
 
-  public <T extends Comparable> void printAll(Bag<T> bag)
+  public <T> void printAll(Bag<T> bag)
   {
     boolean first = true;
     System.out.print("{");
@@ -52,9 +52,9 @@ public class Main
 
   public void go()
   {
-//    factory.setBagClass("ArrayBag");
+    factory.setBagClass("ArrayBag");
 //    factory.setBagClass("MapBag");
-    factory.setBagClass("LinkedListBag");
+//    factory.setBagClass("LinkedListBag");
 
 //    factoryInt.setBagClass("MapBag");
 
@@ -69,6 +69,8 @@ public class Main
       Bag bag5;
       Bag bag6;
       Bag bag7;
+      Bag bag8;
+      Bag bag9;
 
       bag1 = bagList.get(0);
 //      bag1 = factory.getBag();
@@ -138,6 +140,30 @@ public class Main
       System.out.print("bag7 all:                    ");
       printAll(bag7);
       System.out.println(bag7.toString());
+
+      bag8 = factory.getBag(); //not saved in file //a bag storing array-lists
+      List array1 = new ArrayList();
+      array1.add("123");
+      array1.add("456");
+      bag8.add(array1);
+      List array2 = new ArrayList();
+      array2.add("abc");
+      array2.add("def");
+      bag8.addWithOccurrences(array2,2);
+      System.out.print("bag8 all unique:             ");
+      print(bag8);
+      System.out.print("bag8 all:                    ");
+      printAll(bag8);
+      System.out.println(bag8.toString());
+
+      bag9 = factory.getBag(); //not saved in file //a bag storing bags
+      bag9.addWithOccurrences(bag1,1);
+      bag9.addWithOccurrences(bag2,2);
+      System.out.print("bag9 all unique:             ");
+      print(bag9);
+      System.out.print("bag9 all:                    ");
+      printAll(bag9);
+      System.out.println(bag9.toString());
 
       bagSaver.saveBag();
     }

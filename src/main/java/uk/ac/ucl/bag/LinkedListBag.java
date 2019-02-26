@@ -1,10 +1,11 @@
 package uk.ac.ucl.bag;
 
+import java.util.Comparator;
 import java.util.Iterator;
 
-public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
+public class LinkedListBag <T> extends AbstractBag<T> implements Comparator<T> {
 
-    private static class Element<E extends Comparable> {
+    private static class Element<E>{
         public E value;
         public int occurrences;
         public Element<E> next;
@@ -14,6 +15,7 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
             this.occurrences = occurrences;
             this.next = next;
         }
+
     }
 
     private int maxSize;
@@ -65,7 +67,7 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
     private Element<T> find(T value){
         Element<T> curElement = head;
         while(curElement != null){
-            if(curElement.value.compareTo(value) == 0){
+            if(compare(curElement.value,value) == 0){
                 return curElement;
             }
             curElement = curElement.next;
@@ -88,7 +90,7 @@ public class LinkedListBag <T extends Comparable> extends AbstractBag<T>{
         Element<T> curElement = head;
         if(curElement != null){
             while(curElement != null){
-                if(curElement.value.compareTo(value) == 0){
+                if(compare(curElement.value,value) == 0){
                     curElement.occurrences--;
                 }
                 if(curElement.occurrences == 0){
