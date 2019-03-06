@@ -1,3 +1,5 @@
+package uk.ac.ucl;
+
 public class Patient{
     private String id;
     private String birthdate;
@@ -19,6 +21,31 @@ public class Patient{
     private String city;
     private String state;
     private String zip;
+
+    public Patient(String id, String birthdate, String deathdate, String ssn, String drivers, String passport, String prefix, String first, String last, String suffix, String maiden, String marital, String race, String ethnicity, String gender, String birthplace, String address, String city, String state, String zip) {
+        this.id = id;
+        this.birthdate = birthdate;
+        this.deathdate = deathdate;
+        this.ssn = ssn;
+        this.drivers = drivers;
+        this.passport = passport;
+        this.prefix = prefix;
+        this.first = first;
+        this.last = last;
+        this.suffix = suffix;
+        this.maiden = maiden;
+        this.marital = marital;
+        this.race = race;
+        this.ethnicity = ethnicity;
+        this.gender = gender;
+        this.birthplace = birthplace;
+        this.address = address;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
+    }
+
+    public Patient(){}
 
     public String getId() {
         return id;
