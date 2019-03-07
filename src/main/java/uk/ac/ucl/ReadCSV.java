@@ -11,12 +11,13 @@ public class ReadCSV {
 
     private BufferedReader lineReader;
 
-    public ReadCSV(FileReader reader){
+    public ReadCSV(){
         this.patientList = new ArrayList<>();
-        this.lineReader = new BufferedReader(reader);
+        this.lineReader = null;
     }
 
-    public List<Patient> loadPatient() throws IOException {
+    public List<Patient> loadPatient(FileReader reader) throws IOException {
+        lineReader = new BufferedReader(reader);
         String content = lineReader.readLine();
         boolean first = true;
         while(content != null){
