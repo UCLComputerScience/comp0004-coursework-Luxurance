@@ -4,39 +4,44 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 public class JSONFormatter {
-    public String singleToJSON(Patient patient) throws IllegalAccessException{
-        String jsonForm = "";
-        jsonForm += "{\n";
-        Field[] fields = patient.getClass().getDeclaredFields();
-        for(Field curField : fields){
-            jsonForm += "  ";
-            curField.setAccessible(true);
-            jsonForm += "\"" + curField.getName() + "\" : ";
-            String info = curField.get(patient).toString();
-            jsonForm += "\"" + info + "\"";
-            if(!curField.equals(fields[fields.length-1])) {
-                jsonForm += ",\n";
-            }
-            else{
-                jsonForm += "\n";
-            }
+    private StringBuilder builder;
+
+    public JSONFormatter(){
+        this.builder = new StringBuilder();
+    }
+
+    private boolean isLast(Object object, Object[] objects){
+        return ! object.equals(objects[objects.length-1]);
+    }
+
+    private String decideComma(String jsonForm, Object object, Object[] objects){
+        if(isLast(object, objects)) {
+            jsonForm += ",\n";
         }
-        jsonForm += "}";
+        else{
+            jsonForm += "\n";
+        }
         return jsonForm;
     }
+
+    public String singleToJSON(Patient patient) throws IllegalAccessException{
+        String jsonForm = "{\n";
+        Field[] fields = patient.getClass().getDeclaredFields();
+        for(Field curField : fields){
+            curField.setAccessible(true);
+            String info = curField.get(patient).toString();
+            jsonForm += "  \"" + curField.getName() + "\" : \"" + info + "\"";
+            jsonForm = decideComma(jsonForm, curField, fields);
+        }
+        return jsonForm + "}";
+    }
+
     public String listToJSON(List<Patient> patientList) throws IllegalAccessException{
-        String jsonForm = "";
-        jsonForm += "[\n";
+        String jsonForm = "[\n";
         for(Patient curPatient : patientList){
             jsonForm += singleToJSON(curPatient);
-            if(!curPatient.equals(patientList.get(patientList.size()-1))){
-                jsonForm += ",\n";
-            }
-            else{
-                jsonForm += "\n";
-            }
+            jsonForm = decideComma(jsonForm, curPatient, patientList.toArray());
         }
-        jsonForm += "]\n";
-        return jsonForm;
+        return jsonForm + "]\n";
     }
 }
