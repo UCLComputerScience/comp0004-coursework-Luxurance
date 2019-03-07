@@ -1,6 +1,7 @@
 package uk.ac.ucl;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class JSONFormatter {
     public String singleToJSON(Patient patient) throws IllegalAccessException{
@@ -20,8 +21,22 @@ public class JSONFormatter {
                 jsonForm += "\n";
             }
         }
-        jsonForm += "}\n";
+        jsonForm += "}";
         return jsonForm;
     }
-
+    public String listToJSON(List<Patient> patientList) throws IllegalAccessException{
+        String jsonForm = "";
+        jsonForm += "[\n";
+        for(Patient curPatient : patientList){
+            jsonForm += singleToJSON(curPatient);
+            if(!curPatient.equals(patientList.get(patientList.size()-1))){
+                jsonForm += ",\n";
+            }
+            else{
+                jsonForm += "\n";
+            }
+        }
+        jsonForm += "]\n";
+        return jsonForm;
+    }
 }

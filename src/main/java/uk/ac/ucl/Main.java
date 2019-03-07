@@ -23,6 +23,6 @@ public class Main {
 //            System.out.println(value.toString());
 //        }
         JSONFormatter formatter = new JSONFormatter();
-        System.out.println(formatter.singleToJSON(patientList.get(0)));
+        System.out.println(formatter.listToJSON(patientList.subList(1,5)));
     }
 }
