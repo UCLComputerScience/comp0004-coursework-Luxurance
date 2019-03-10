@@ -77,7 +77,7 @@ public class View extends JFrame {
         try {
             int operation = fileChooser.showOpenDialog(this);
             if (operation == JFileChooser.APPROVE_OPTION) {
-                model.readFile(fileChooser.getSelectedFile().getAbsolutePath());
+                model.readCSVFile(fileChooser.getSelectedFile().getAbsolutePath());
             }
         }
         catch (IOException e1){
@@ -100,7 +100,7 @@ public class View extends JFrame {
                     errorMessage("No patient is loaded");
                 }
                 else {
-                    model.writeFile(fileChooser.getSelectedFile().getAbsolutePath());
+                    model.writeJSONFile(fileChooser.getSelectedFile().getAbsolutePath());
                 }
             }
         }

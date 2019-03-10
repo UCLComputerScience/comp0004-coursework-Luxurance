@@ -1,5 +1,6 @@
 package uk.ac.ucl;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,6 +15,8 @@ public class Model {
 
     private ReadCSV readCSV;
 
+    private WriteCSV writeCSV;
+
     private JSONFormatter jsonFormatter;
 
     public Model(){
@@ -21,13 +24,39 @@ public class Model {
         this.reader = null;
         this.writer = null;
         this.readCSV = new ReadCSV();
+        this.writeCSV = new WriteCSV();
         this.jsonFormatter = new JSONFormatter();
     }
 
-    public void readFile(String path) throws IOException {
+    public void readCSVFile(String path) throws IOException {
         reader = new FileReader(path);
         patientList = readCSV.loadPatient(reader);
         reader.close();
+    }
+
+    public void writeCSVFile(String path, List<Patient> patientList) throws IOException, IllegalAccessException{
+        writeCSV.setPatientList(patientList);
+        writeCSV.savePatient(new FileWriter(path));
+    }
+
+    public void writeJSONFile(String path) throws IOException, IllegalAccessException{
+        writer = new FileWriter(path); //set to true to append
+        String jsonForm = getAllJSON();
+        for(char c : jsonForm.toCharArray()){
+            writer.append(c);
+        }
+        writer.close();
+    }
+
+    public void readJSONFile(String path) throws IOException, IllegalAccessException{
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
+        String content = bufferedReader.readLine();
+        String jsonForm = "";
+        while(content!=null){
+            jsonForm += content + "\n";
+            content = bufferedReader.readLine();
+        }
+        patientList = getPatientListFromJSON(jsonForm);
     }
 
     public List<Patient> getPatientList(){
@@ -42,14 +71,7 @@ public class Model {
         return jsonFormatter.listToJSON(this.patientList);
     }
 
-    public void writeFile(String path) throws IOException, IllegalAccessException{
-        writer = new FileWriter(path,true);
-        String jsonForm = getAllJSON();
-        for(char c : jsonForm.toCharArray()){
-            writer.append(c);
-        }
-        writer.close();
-    }
+
 
     public Patient getSinglePatientFromJSON(String jsonForm) throws IllegalAccessException{
         return jsonFormatter.jsonToPatient(jsonForm);
@@ -58,4 +80,5 @@ public class Model {
     public List<Patient> getPatientListFromJSON(String jsonForm) throws IllegalAccessException{
         return jsonFormatter.jsonToPatientList(jsonForm);
     }
+
 }

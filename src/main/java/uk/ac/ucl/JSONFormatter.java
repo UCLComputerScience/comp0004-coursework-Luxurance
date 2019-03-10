@@ -68,11 +68,11 @@ public class JSONFormatter {
         Patient patient = new Patient();
         String[] infoLines = jsonForm.split("\n");
         for(String line : infoLines){
-            if(line.equals("{") || line.equals("}")){
+            if(line.contains("{") || line.contains("}")){
                 continue;
             }
-            String twoElemnt = line.replace(":"," ").replace("\""," ").replace(",","");
-            StringTokenizer tokenizer = new StringTokenizer(twoElemnt);
+            String twoElement = line.replace(":"," ").replace("\""," ").replace(",","");
+            StringTokenizer tokenizer = new StringTokenizer(twoElement);
             if(!tokenizer.hasMoreTokens()){
                 continue;
             }
