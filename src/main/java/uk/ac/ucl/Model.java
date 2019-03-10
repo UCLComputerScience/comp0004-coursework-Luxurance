@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Model {
@@ -80,5 +81,14 @@ public class Model {
     public List<Patient> getPatientListFromJSON(String jsonForm) throws IllegalAccessException{
         return jsonFormatter.jsonToPatientList(jsonForm);
     }
+
+    public List<String> getPatientNamesList(){
+        List<String> nameList = new ArrayList<>();
+        for(Patient curPatient : patientList){
+            nameList.add((curPatient.getFirst()+" "+curPatient.getLast()).replaceAll("[0-9]",""));
+        }
+        return nameList;
+    }
+
 
 }

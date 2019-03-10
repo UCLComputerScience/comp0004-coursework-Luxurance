@@ -8,9 +8,16 @@ import java.io.File;
 import java.io.IOException;
 
 public class View extends JFrame {
+
     private JPanel panel;
 
-    private JPanel bottomPanel;
+    private JPanel buttonPanel;
+
+    private JPanel listPanel;
+
+    private JList patientListView;
+
+    private JScrollPane nameScroller;
 
     private JLabel label;
 
@@ -22,11 +29,19 @@ public class View extends JFrame {
 
     private JFileChooser fileChooser;
 
+    private FileNameExtensionFilter csvFilter;
+
+    private FileNameExtensionFilter txtFilter;
+
     public View() {
-        setTitle("Test");
-        setLocation(600,400);
+        setTitle("Patient Data Manager");
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setPreferredSize(screenSize);
+        setLocation((int)screenSize.getWidth()/2,(int)screenSize.getHeight()/2);
         this.model = new Model();
 
+        createListView();
+        createListPanel();
         createButton();
         createLabel();
         createPenal();
@@ -46,8 +61,21 @@ public class View extends JFrame {
         saveButton.addActionListener((ActionEvent e) -> saveFile());
     }
 
+    private void createListView(){
+        String[] arrayDisplayed = {};
+        patientListView = new JList(arrayDisplayed);
+    }
+
+    private void createFileFilter(){
+        csvFilter = new FileNameExtensionFilter(".csv CSV formatted", "csv");
+        txtFilter = new FileNameExtensionFilter(".txt JSON formatted", "txt");
+    }
+
     private void createFileChooser(){
         this.fileChooser = new JFileChooser("/Users/Lance 1 2/IdeaProjects/cwBag/patient_data/patient_data");
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.addChoosableFileFilter(csvFilter);
+        fileChooser.addChoosableFileFilter(txtFilter);
     }
 
     private void createLabel(){
@@ -55,14 +83,23 @@ public class View extends JFrame {
     }
 
     private void createPenal(){
-        this.bottomPanel = new JPanel(new GridLayout(1,4));
-        bottomPanel.add(loadButton);
-        bottomPanel.add(saveButton);
+        this.buttonPanel = new JPanel(new GridLayout(1,2));
+        buttonPanel.add(loadButton);
+        buttonPanel.add(saveButton);
 
         this.panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(60,80,0,80));
-        panel.add(bottomPanel,BorderLayout.SOUTH);
+        panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        panel.add(buttonPanel,BorderLayout.SOUTH);
         panel.add(label,BorderLayout.NORTH);
+        panel.add(listPanel,BorderLayout.WEST);
+    }
+
+    private void createListPanel(){
+        this.nameScroller = new JScrollPane(patientListView);
+
+        this.listPanel = new JPanel(new BorderLayout());
+        listPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        listPanel.add(nameScroller,BorderLayout.CENTER);
     }
 
     private void errorMessage(String text){
@@ -74,24 +111,20 @@ public class View extends JFrame {
     }
 
     private void loadFile() {
+        createFileFilter();
         createFileChooser();
-        fileChooser.setAcceptAllFileFilterUsed(false);
-        FileNameExtensionFilter csvFilter = new FileNameExtensionFilter(".csv CSV formatted", "csv");
-        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter(".txt JSON formatted", "txt");
-        fileChooser.addChoosableFileFilter(csvFilter);
-        fileChooser.addChoosableFileFilter(txtFilter);
         try {
             int operation = fileChooser.showOpenDialog(this);
             if (operation == JFileChooser.APPROVE_OPTION) {
                 File fileSelected = fileChooser.getSelectedFile();
                 if(fileSelected.getName().endsWith(".csv")) {
                     model.readCSVFile(fileSelected.getAbsolutePath());
-                    notificationMessage("Load successfully");
                 }
                 if(fileSelected.getName().endsWith(".txt")){
                     model.readJSONFile(fileSelected.getAbsolutePath());
-                    notificationMessage("Load successfully");
                 }
+                notificationMessage("Load successfully");
+                patientListView.setListData(model.getPatientNamesList().toArray());
             }
         }
         catch (IOException e1){
@@ -106,12 +139,8 @@ public class View extends JFrame {
     }
 
     private void saveFile(){
+        createFileFilter();
         createFileChooser();
-        fileChooser.setAcceptAllFileFilterUsed(false);
-        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter(".txt JSON formatted", "txt");
-        FileNameExtensionFilter csvFilter = new FileNameExtensionFilter(".csv CSV formatted", "csv");
-        fileChooser.addChoosableFileFilter(csvFilter);
-        fileChooser.addChoosableFileFilter(txtFilter);
         try{
             int operation = fileChooser.showSaveDialog(this);
             if(operation == JFileChooser.APPROVE_OPTION){

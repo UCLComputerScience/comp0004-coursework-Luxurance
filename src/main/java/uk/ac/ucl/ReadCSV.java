@@ -7,16 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReadCSV {
-    private List<Patient> patientList;
-
     private BufferedReader lineReader;
 
     public ReadCSV(){
-        this.patientList = new ArrayList<>();
         this.lineReader = null;
     }
 
     public List<Patient> loadPatient(FileReader reader) throws IOException {
+        List<Patient> patientList = new ArrayList<>();
         lineReader = new BufferedReader(reader);
         String content = lineReader.readLine();
         boolean first = true;
@@ -52,11 +50,11 @@ public class ReadCSV {
             else{
                 curPatient.setZip("");
             }
-            this.patientList.add(curPatient);
+            patientList.add(curPatient);
             content = lineReader.readLine();
 
         }
         lineReader.close();
-        return this.patientList;
+        return patientList;
     }
 }
