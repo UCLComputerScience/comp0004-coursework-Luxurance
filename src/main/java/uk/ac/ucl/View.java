@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.IOException;
 
 public class View extends JFrame {
@@ -68,16 +69,29 @@ public class View extends JFrame {
         JOptionPane.showMessageDialog(this, text, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    private void loadFile(){
+    private void notificationMessage(String text){
+        JOptionPane.showMessageDialog(this, text, "Done",JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void loadFile() {
         createFileChooser();
         fileChooser.setAcceptAllFileFilterUsed(false);
-        System.out.println(fileChooser.getAcceptAllFileFilter().toString());
-        FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("Only .csv file is allowed", "csv");
+        FileNameExtensionFilter csvFilter = new FileNameExtensionFilter(".csv CSV formatted", "csv");
+        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter(".txt JSON formatted", "txt");
         fileChooser.addChoosableFileFilter(csvFilter);
+        fileChooser.addChoosableFileFilter(txtFilter);
         try {
             int operation = fileChooser.showOpenDialog(this);
             if (operation == JFileChooser.APPROVE_OPTION) {
-                model.readCSVFile(fileChooser.getSelectedFile().getAbsolutePath());
+                File fileSelected = fileChooser.getSelectedFile();
+                if(fileSelected.getName().endsWith(".csv")) {
+                    model.readCSVFile(fileSelected.getAbsolutePath());
+                    notificationMessage("Load successfully");
+                }
+                if(fileSelected.getName().endsWith(".txt")){
+                    model.readJSONFile(fileSelected.getAbsolutePath());
+                    notificationMessage("Load successfully");
+                }
             }
         }
         catch (IOException e1){
@@ -86,12 +100,17 @@ public class View extends JFrame {
         catch (ArrayIndexOutOfBoundsException e2){
             errorMessage("Invalid format");
         }
+        catch (IllegalAccessException e3){
+            errorMessage("Read fails");
+        }
     }
 
     private void saveFile(){
         createFileChooser();
         fileChooser.setAcceptAllFileFilterUsed(false);
-        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("Only .txt file is allowed", "txt");
+        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter(".txt JSON formatted", "txt");
+        FileNameExtensionFilter csvFilter = new FileNameExtensionFilter(".csv CSV formatted", "csv");
+        fileChooser.addChoosableFileFilter(csvFilter);
         fileChooser.addChoosableFileFilter(txtFilter);
         try{
             int operation = fileChooser.showSaveDialog(this);
@@ -100,7 +119,16 @@ public class View extends JFrame {
                     errorMessage("No patient is loaded");
                 }
                 else {
-                    model.writeJSONFile(fileChooser.getSelectedFile().getAbsolutePath());
+                    File fileSelected = fileChooser.getSelectedFile();
+                    if(fileSelected.getName().endsWith(".txt")) {
+                        model.writeJSONFile(fileChooser.getSelectedFile().getAbsolutePath());
+                        notificationMessage("Save successfully");
+
+                    }
+                    if(fileSelected.getName().endsWith(".csv")){
+                        model.writeCSVFile(fileSelected.getAbsolutePath(),model.getPatientList());
+                        notificationMessage("Save successfully");
+                    }
                 }
             }
         }
