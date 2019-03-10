@@ -73,6 +73,9 @@ public class JSONFormatter {
             }
             String twoElemnt = line.replace(":"," ").replace("\""," ").replace(",","");
             StringTokenizer tokenizer = new StringTokenizer(twoElemnt);
+            if(!tokenizer.hasMoreTokens()){
+                continue;
+            }
             List<Field> fields = arrayToList(patient.getClass().getDeclaredFields());
             Field field = findField(tokenizer.nextToken(),fields);
             field.setAccessible(true);
@@ -83,5 +86,14 @@ public class JSONFormatter {
             field.set(patient,"");
         }
         return patient;
+    }
+
+    public List<Patient> jsonToPatientList(String jsonForm) throws IllegalAccessException{
+        List<Patient> patientList = new ArrayList<>();
+        String[] patientJSONs = jsonForm.replace("[","").replace("]","").split("},");
+        for(String patientJSON : patientJSONs){
+            patientList.add(jsonToPatient(patientJSON));
+        }
+        return  patientList;
     }
 }

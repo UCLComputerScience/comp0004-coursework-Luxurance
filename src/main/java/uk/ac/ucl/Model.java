@@ -51,7 +51,11 @@ public class Model {
         writer.close();
     }
 
-    public Patient getSinglePatient(String jsonForm) throws IllegalAccessException{
+    public Patient getSinglePatientFromJSON(String jsonForm) throws IllegalAccessException{
         return jsonFormatter.jsonToPatient(jsonForm);
+    }
+
+    public List<Patient> getPatientListFromJSON(String jsonForm) throws IllegalAccessException{
+        return jsonFormatter.jsonToPatientList(jsonForm);
     }
 }
