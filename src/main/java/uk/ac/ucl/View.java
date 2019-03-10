@@ -13,9 +13,9 @@ public class View extends JFrame {
 
     private JLabel label;
 
-    private JButton button;
+    private JButton loadButton;
 
-    private JButton testButton;
+    private JButton saveButton;
 
     private Model model;
 
@@ -30,17 +30,6 @@ public class View extends JFrame {
         createLabel();
         createPenal();
 
-        this.fileChooser = new JFileChooser("/Users/Lance 1 2/IdeaProjects/cwBag/patient_data/patient_data");
-
-        panel.setBorder(BorderFactory.createEmptyBorder(60,80,0,80));
-        bottomPanel.add(button);
-        bottomPanel.add(testButton);
-        panel.add(bottomPanel,BorderLayout.SOUTH);
-        panel.add(label,BorderLayout.NORTH);
-
-
-        button.addActionListener((ActionEvent e) -> loadFile());
-
         add(panel);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,8 +38,15 @@ public class View extends JFrame {
     }
 
     private void createButton(){
-        this.button = new JButton("Load..");
-        this.testButton = new JButton("Test");
+        this.loadButton = new JButton("Load..");
+        loadButton.addActionListener((ActionEvent e) -> loadFile());
+
+        this.saveButton = new JButton("Save..");
+        saveButton.addActionListener((ActionEvent e) -> saveFile());
+    }
+
+    private void createFileChooser(){
+        this.fileChooser = new JFileChooser("/Users/Lance 1 2/IdeaProjects/cwBag/patient_data/patient_data");
     }
 
     private void createLabel(){
@@ -58,29 +54,62 @@ public class View extends JFrame {
     }
 
     private void createPenal(){
-        this.panel = new JPanel(new BorderLayout());
         this.bottomPanel = new JPanel(new GridLayout(1,4));
+        bottomPanel.add(loadButton);
+        bottomPanel.add(saveButton);
+
+        this.panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(60,80,0,80));
+        panel.add(bottomPanel,BorderLayout.SOUTH);
+        panel.add(label,BorderLayout.NORTH);
     }
 
-    public void loadFile(){
+    private void errorMessage(String text){
+        JOptionPane.showMessageDialog(this, text, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void loadFile(){
+        createFileChooser();
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        System.out.println(fileChooser.getAcceptAllFileFilter().toString());
+        FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("Only .csv file is allowed", "csv");
+        fileChooser.addChoosableFileFilter(csvFilter);
         try {
-            fileChooser.setAcceptAllFileFilterUsed(false);
-
-            FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("Only .csv file is allowed", "csv");
-            fileChooser.addChoosableFileFilter(csvFilter);
-
-            int operation = fileChooser.showOpenDialog(null);
+            int operation = fileChooser.showOpenDialog(this);
             if (operation == JFileChooser.APPROVE_OPTION) {
                 model.readFile(fileChooser.getSelectedFile().getAbsolutePath());
             }
         }
         catch (IOException e1){
-            System.out.println("Invalid file.");
+            errorMessage("Invalid format");
         }
         catch (ArrayIndexOutOfBoundsException e2){
-            System.out.println("Invalid-format file.");
+            errorMessage("Invalid format");
         }
+    }
 
+    private void saveFile(){
+        createFileChooser();
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("Only .txt file is allowed", "txt");
+        fileChooser.addChoosableFileFilter(txtFilter);
+        try{
+            int operation = fileChooser.showSaveDialog(this);
+            if(operation == JFileChooser.APPROVE_OPTION){
+                if(model.getPatientList() == null){
+                    errorMessage("No patient is loaded");
+                }
+                else {
+                    model.writeFile(fileChooser.getSelectedFile().getAbsolutePath());
+                }
+            }
+        }
+        catch (IOException e1){
+            errorMessage("Invalid file");
+        }
+        catch (IllegalAccessException e2) {
+            errorMessage("Invalid file");
+        }
     }
 
     public static void main(String[] args){
