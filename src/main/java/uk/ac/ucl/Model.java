@@ -96,12 +96,27 @@ public class Model {
         return jsonFormatter.jsonToPatientList(jsonForm);
     }
 
-    public List<String> getPatientNamesList(){
+    public List<String> getPatientNamesList(List<Patient> patientList){
         List<String> nameList = new ArrayList<>();
         for(Patient curPatient : patientList){
             nameList.add((curPatient.getFirst()+" "+curPatient.getLast()).replaceAll("[0-9]",""));
         }
         return nameList;
+    }
+
+    public List<String> getPatientNamesList(){
+        return getPatientNamesList(patientList);
+    }
+
+    public List<Patient> searchPatient(String keyWord){
+        List<Patient> matchedPatients = new ArrayList<>();
+        for(Patient curPatient : patientList){
+            if(curPatient.getFirst().contains(keyWord) || curPatient.getLast().contains(keyWord) ||
+                    curPatient.getId().contains(keyWord)){
+                matchedPatients.add(curPatient);
+            }
+        }
+        return matchedPatients;
     }
 
 

@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class View extends JFrame {
 
@@ -18,6 +19,10 @@ public class View extends JFrame {
 
     private JPanel infoPanel;
 
+    private JPanel searchPanel;
+
+    private JTextField searchField;
+
     private JList patientListView;
 
     private JList infoListView;
@@ -26,7 +31,7 @@ public class View extends JFrame {
 
     private JScrollPane infoScroller;
 
-    private JLabel label;
+    private JLabel searchLabel;
 
     private JLabel listLabel;
 
@@ -36,6 +41,8 @@ public class View extends JFrame {
 
     private JButton saveButton;
 
+    private JButton searchButton;
+
     private Model model;
 
     private JFileChooser fileChooser;
@@ -43,6 +50,8 @@ public class View extends JFrame {
     private FileNameExtensionFilter csvFilter;
 
     private FileNameExtensionFilter txtFilter;
+
+    private List<Patient> listToDisplay;
 
     public View() {
         setTitle("Patient Data Manager");
@@ -54,6 +63,7 @@ public class View extends JFrame {
         this.model = new Model();
 
         createListView();
+        createTextField();
         createLabel();
         createListPanel();
         createButton();
@@ -67,11 +77,15 @@ public class View extends JFrame {
     }
 
     private void createButton(){
-        this.loadButton = new JButton("Load..");
+        loadButton = new JButton("Load..");
         loadButton.addActionListener((ActionEvent e) -> loadFile());
 
-        this.saveButton = new JButton("Save..");
+        saveButton = new JButton("Save..");
         saveButton.addActionListener((ActionEvent e) -> saveFile());
+
+        searchButton = new JButton("Match");
+        searchButton.addActionListener((ActionEvent e) -> applySearch());
+
     }
 
     private void createListView(){
@@ -81,6 +95,11 @@ public class View extends JFrame {
         patientListView.addListSelectionListener((ListSelectionEvent e) -> showInfo(e));
 
         infoListView = new JList();
+    }
+
+    private void createTextField(){
+        searchField = new JTextField();
+
     }
 
     private void createFileFilter(){
@@ -96,22 +115,28 @@ public class View extends JFrame {
     }
 
     private void createLabel(){
-        label = new JLabel("test");
+        searchLabel = new JLabel("Search:");
         listLabel = new JLabel("Patients:");
         infoLabel = new JLabel("Personal Information:");
     }
 
     private void createPenal(){
-        this.buttonPanel = new JPanel(new GridLayout(1,2));
+        buttonPanel = new JPanel(new GridLayout(1,2));
         buttonPanel.add(loadButton);
         buttonPanel.add(saveButton);
 
-        this.panel = new JPanel(new BorderLayout());
+        searchPanel = new JPanel(new BorderLayout());
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(10,10,0,10));
+        searchPanel.add(searchField, BorderLayout.CENTER);
+        searchPanel.add(searchLabel, BorderLayout.WEST);
+        searchPanel.add(searchButton,BorderLayout.EAST);
+
+        panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         panel.add(buttonPanel,BorderLayout.SOUTH);
-        panel.add(label,BorderLayout.NORTH);
         panel.add(listPanel,BorderLayout.WEST);
         panel.add(infoPanel,BorderLayout.CENTER);
+        panel.add(searchPanel,BorderLayout.NORTH);
     }
 
     private void createListPanel(){
@@ -119,12 +144,12 @@ public class View extends JFrame {
         infoScroller = new JScrollPane(infoListView);
 
         listPanel = new JPanel(new BorderLayout());
-        listPanel.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
+        listPanel.setBorder(BorderFactory.createEmptyBorder(15,10,15,30));
         listPanel.add(nameScroller,BorderLayout.CENTER);
         listPanel.add(listLabel,BorderLayout.NORTH);
 
         infoPanel = new JPanel(new BorderLayout());
-        infoPanel.setBorder(BorderFactory.createEmptyBorder(30,15,30,30));
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(15,0,15,10));
         infoPanel.add(infoScroller,BorderLayout.CENTER);
         infoPanel.add(infoLabel,BorderLayout.NORTH);
     }
@@ -152,6 +177,7 @@ public class View extends JFrame {
                 }
                 notificationMessage("Load successfully");
                 patientListView.setListData(model.getPatientNamesList().toArray());
+                listToDisplay = model.getPatientList();
             }
         }
         catch (IOException e1){
@@ -169,6 +195,7 @@ public class View extends JFrame {
         createFileFilter();
         createFileChooser();
         try{
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             int operation = fileChooser.showSaveDialog(this);
             if(operation == JFileChooser.APPROVE_OPTION){
                 if(model.getPatientList() == null){
@@ -176,15 +203,14 @@ public class View extends JFrame {
                 }
                 else {
                     File fileSelected = fileChooser.getSelectedFile();
-                    if(fileSelected.getName().endsWith(".txt")) {
-                        model.writeJSONFile(fileChooser.getSelectedFile().getAbsolutePath());
-                        notificationMessage("Save successfully");
-
+                    String filterName = fileChooser.getFileFilter().getDescription();
+                    if(filterName.contains("txt")) {
+                        model.writeJSONFile(fileSelected.getAbsolutePath());
                     }
-                    if(fileSelected.getName().endsWith(".csv")){
+                    if(filterName.contains("csv")){
                         model.writeCSVFile(fileSelected.getAbsolutePath(),model.getPatientList());
-                        notificationMessage("Save successfully");
                     }
+                    notificationMessage("Save successfully");
                 }
             }
         }
@@ -200,10 +226,24 @@ public class View extends JFrame {
         try {
             JList source = (JList)e.getSource();
             int indexSelected = source.getSelectedIndex();
-            infoListView.setListData(model.getPatientInfo(model.getPatientList().get(indexSelected)).toArray());
+            if(indexSelected == -1){
+                return;
+            }
+            infoListView.setListData(model.getPatientInfo(listToDisplay.get(indexSelected)).toArray());
         }
         catch (IllegalAccessException error){
             errorMessage("Cannot find the personal information");
+        }
+    }
+
+    private void applySearch(){
+        try {
+            String keyword = searchField.getText();
+            listToDisplay = model.searchPatient(keyword);
+            patientListView.setListData(model.getPatientNamesList(listToDisplay).toArray());
+        }
+        catch(NullPointerException e){
+            errorMessage("Patient not found");
         }
     }
 
