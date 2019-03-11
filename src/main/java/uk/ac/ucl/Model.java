@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +61,21 @@ public class Model {
         patientList = getPatientListFromJSON(jsonForm);
     }
 
+    public List<String> getPatientInfo(Patient patient) throws IllegalAccessException{
+        List<String> result = new ArrayList<>();
+        Field[] fields = patient.getClass().getDeclaredFields();
+        for(Field curField : fields){
+            curField.setAccessible(true);
+            String fieldName = curField.getName();
+            String fieldContent = curField.get(patient).toString();
+            if(fieldName.equals("first")||fieldName.equals("last")||fieldName.equals("maiden")){
+                fieldContent = fieldContent.replaceAll("[0-9]","");
+            }
+            result.add(fieldName+" : "+fieldContent);
+        }
+        return result;
+    }
+
     public List<Patient> getPatientList(){
         return this.patientList;
     }
@@ -71,8 +87,6 @@ public class Model {
     public String getAllJSON() throws IllegalAccessException{
         return jsonFormatter.listToJSON(this.patientList);
     }
-
-
 
     public Patient getSinglePatientFromJSON(String jsonForm) throws IllegalAccessException{
         return jsonFormatter.jsonToPatient(jsonForm);

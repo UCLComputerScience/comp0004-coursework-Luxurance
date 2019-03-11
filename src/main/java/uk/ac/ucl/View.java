@@ -1,6 +1,7 @@
 package uk.ac.ucl;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,11 +16,21 @@ public class View extends JFrame {
 
     private JPanel listPanel;
 
+    private JPanel infoPanel;
+
     private JList patientListView;
+
+    private JList infoListView;
 
     private JScrollPane nameScroller;
 
+    private JScrollPane infoScroller;
+
     private JLabel label;
+
+    private JLabel listLabel;
+
+    private JLabel infoLabel;
 
     private JButton loadButton;
 
@@ -36,14 +47,16 @@ public class View extends JFrame {
     public View() {
         setTitle("Patient Data Manager");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setPreferredSize(screenSize);
-        setLocation((int)screenSize.getWidth()/2,(int)screenSize.getHeight()/2);
+        Dimension halfScreen = new Dimension();
+        halfScreen.setSize((int)screenSize.getWidth()/2,(int)screenSize.getHeight()/2);
+        setPreferredSize(halfScreen);
+        setLocation((int)screenSize.getWidth()/4,(int)screenSize.getHeight()/4);
         this.model = new Model();
 
         createListView();
+        createLabel();
         createListPanel();
         createButton();
-        createLabel();
         createPenal();
 
         add(panel);
@@ -62,8 +75,12 @@ public class View extends JFrame {
     }
 
     private void createListView(){
-        String[] arrayDisplayed = {};
-        patientListView = new JList(arrayDisplayed);
+//        String[] arrayDisplayed = {"          No patient is loaded yet.         "};
+        patientListView = new JList();
+        patientListView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        patientListView.addListSelectionListener((ListSelectionEvent e) -> showInfo(e));
+
+        infoListView = new JList();
     }
 
     private void createFileFilter(){
@@ -79,7 +96,9 @@ public class View extends JFrame {
     }
 
     private void createLabel(){
-        this.label = new JLabel("test");
+        label = new JLabel("test");
+        listLabel = new JLabel("Patients:");
+        infoLabel = new JLabel("Personal Information:");
     }
 
     private void createPenal(){
@@ -92,14 +111,22 @@ public class View extends JFrame {
         panel.add(buttonPanel,BorderLayout.SOUTH);
         panel.add(label,BorderLayout.NORTH);
         panel.add(listPanel,BorderLayout.WEST);
+        panel.add(infoPanel,BorderLayout.CENTER);
     }
 
     private void createListPanel(){
-        this.nameScroller = new JScrollPane(patientListView);
+        nameScroller = new JScrollPane(patientListView);
+        infoScroller = new JScrollPane(infoListView);
 
-        this.listPanel = new JPanel(new BorderLayout());
-        listPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        listPanel = new JPanel(new BorderLayout());
+        listPanel.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
         listPanel.add(nameScroller,BorderLayout.CENTER);
+        listPanel.add(listLabel,BorderLayout.NORTH);
+
+        infoPanel = new JPanel(new BorderLayout());
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(30,15,30,30));
+        infoPanel.add(infoScroller,BorderLayout.CENTER);
+        infoPanel.add(infoLabel,BorderLayout.NORTH);
     }
 
     private void errorMessage(String text){
@@ -166,6 +193,17 @@ public class View extends JFrame {
         }
         catch (IllegalAccessException e2) {
             errorMessage("Invalid file");
+        }
+    }
+
+    private void showInfo(ListSelectionEvent e){
+        try {
+            JList source = (JList)e.getSource();
+            int indexSelected = source.getSelectedIndex();
+            infoListView.setListData(model.getPatientInfo(model.getPatientList().get(indexSelected)).toArray());
+        }
+        catch (IllegalAccessException error){
+            errorMessage("Cannot find the personal information");
         }
     }
 

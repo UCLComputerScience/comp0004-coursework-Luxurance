@@ -17,8 +17,7 @@ public class Main {
 //        for(Patient curPatient : model.getPatientList()) {
 //            System.out.println(curPatient.getId() + " " + curPatient.getZip());
 //        }
-        model.writeCSVFile("/Users/Lance 1 2/IdeaProjects/cwBag/patient_data/patient_data/copy_100patient.csv", model.getPatientList());
-
+        System.out.println(model.getPatientInfo(model.getPatientList().get(0)));
 
     }
 }
