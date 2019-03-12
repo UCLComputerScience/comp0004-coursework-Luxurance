@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,11 +113,29 @@ public class Model {
         List<Patient> matchedPatients = new ArrayList<>();
         for(Patient curPatient : patientList){
             if(curPatient.getFirst().contains(keyWord) || curPatient.getLast().contains(keyWord) ||
-                    curPatient.getId().contains(keyWord)){
+                    curPatient.getId().contains(keyWord) ||
+                    (curPatient.getFirst().replaceAll("[0-9]","")+" "+curPatient.getLast()).contains(keyWord)){
                 matchedPatients.add(curPatient);
             }
         }
         return matchedPatients;
+    }
+
+    public int getMeanAge(List<Patient> patientList){
+        int patientNum = patientList.size();
+        int ageSum = 0;
+        int curYear = Year.now().getValue();
+        for(Patient curPatient: patientList){
+            if(!curPatient.getDeathdate().equals("")){
+                patientNum--;
+                continue;
+            }
+            ageSum += curYear - Integer.valueOf(curPatient.getBirthdate().substring(0,4));
+        }
+        if(ageSum == 0){
+            return 0;
+        }
+        return ageSum/patientNum;
     }
 
 

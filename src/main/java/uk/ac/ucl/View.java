@@ -43,6 +43,8 @@ public class View extends JFrame {
 
     private JButton searchButton;
 
+    private JButton statsButtons;
+
     private Model model;
 
     private JFileChooser fileChooser;
@@ -61,6 +63,7 @@ public class View extends JFrame {
         setPreferredSize(halfScreen);
         setLocation((int)screenSize.getWidth()/4,(int)screenSize.getHeight()/4);
         this.model = new Model();
+        this.listToDisplay = null;
 
         createListView();
         createTextField();
@@ -85,6 +88,9 @@ public class View extends JFrame {
 
         searchButton = new JButton("Match");
         searchButton.addActionListener((ActionEvent e) -> applySearch());
+
+        statsButtons = new JButton("Stats.");
+        statsButtons.addActionListener((ActionEvent e) -> showStats());
 
     }
 
@@ -121,9 +127,10 @@ public class View extends JFrame {
     }
 
     private void createPenal(){
-        buttonPanel = new JPanel(new GridLayout(1,2));
+        buttonPanel = new JPanel(new GridLayout(1,3));
         buttonPanel.add(loadButton);
         buttonPanel.add(saveButton);
+        buttonPanel.add(statsButtons);
 
         searchPanel = new JPanel(new BorderLayout());
         searchPanel.setBorder(BorderFactory.createEmptyBorder(10,10,0,10));
@@ -245,6 +252,14 @@ public class View extends JFrame {
         catch(NullPointerException e){
             errorMessage("Patient not found");
         }
+    }
+
+    private void showStats(){
+        if(listToDisplay == null || listToDisplay.size() == 0){
+            errorMessage("No patient");
+            return;
+        }
+        SwingUtilities.invokeLater(() -> new StatsView(model,listToDisplay));
     }
 
     public static void main(String[] args){

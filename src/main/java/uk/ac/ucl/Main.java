@@ -1,6 +1,7 @@
 package uk.ac.ucl;
 
 import java.io.IOException;
+import java.time.Year;
 import java.util.List;
 
 public class Main {
@@ -17,7 +18,7 @@ public class Main {
 //        for(Patient curPatient : model.getPatientList()) {
 //            System.out.println(curPatient.getId() + " " + curPatient.getZip());
 //        }
-        System.out.println(model.getPatientInfo(model.getPatientList().get(0)));
+        System.out.println(Year.now().getValue());
 
     }
 }
