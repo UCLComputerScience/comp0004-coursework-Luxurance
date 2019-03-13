@@ -8,7 +8,13 @@ import java.util.List;
 public class StatsView extends JFrame {
     private JPanel mainPanel;
 
+    private JPanel labelPanel;
+
     private JLabel meanAgeLabel;
+
+    private JLabel youngestLabel;
+
+    private JLabel eldestLabel;
 
     private JButton closeButton;
 
@@ -45,14 +51,21 @@ public class StatsView extends JFrame {
     }
 
     private void createLabel(){
+        youngestLabel = new JLabel("Youngest : " + model.getYoungest(listToDisplay));
         meanAgeLabel = new JLabel("Mean age : " + model.getMeanAge(listToDisplay));
+        eldestLabel = new JLabel("Eldest : " + model.getEldest(listToDisplay));
     }
 
     private void createPanel(){
+        labelPanel = new JPanel(new GridLayout(1,3));
+        labelPanel.add(youngestLabel);
+        labelPanel.add(meanAgeLabel);
+        labelPanel.add(eldestLabel);
+
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
         mainPanel.add(closeButton,BorderLayout.SOUTH);
-        mainPanel.add(meanAgeLabel,BorderLayout.CENTER);
+        mainPanel.add(labelPanel,BorderLayout.CENTER);
     }
 
     private void closeFrame(){

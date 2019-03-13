@@ -31,6 +31,11 @@ public class Model {
         this.jsonFormatter = new JSONFormatter();
     }
 
+    private int getAge(Patient patient){
+        int curYear = Year.now().getValue();
+        return curYear - Integer.valueOf(patient.getBirthdate().substring(0,4));
+    }
+
     public void readCSVFile(String path) throws IOException {
         reader = new FileReader(path);
         patientList = readCSV.loadPatient(reader);
@@ -124,18 +129,49 @@ public class Model {
     public int getMeanAge(List<Patient> patientList){
         int patientNum = patientList.size();
         int ageSum = 0;
-        int curYear = Year.now().getValue();
         for(Patient curPatient: patientList){
             if(!curPatient.getDeathdate().equals("")){
                 patientNum--;
                 continue;
             }
-            ageSum += curYear - Integer.valueOf(curPatient.getBirthdate().substring(0,4));
+            ageSum += getAge(curPatient);
         }
         if(ageSum == 0){
             return 0;
         }
         return ageSum/patientNum;
+    }
+
+    public int getYoungest(List<Patient> patientList){
+        int minAge = 999; // sufficiently large age that is impossible
+        for(Patient curPatient : patientList){
+            if(!curPatient.getDeathdate().equals("")){
+                continue;
+            }
+            if(getAge(curPatient) < minAge){
+                minAge = getAge(curPatient);
+            }
+        }
+        if(minAge == 999){
+            return 0;
+        }
+        return minAge;
+    }
+
+    public int getEldest(List<Patient> patientList){
+        int maxAge = -1; // sufficiently small age that is impossible
+        for(Patient curPatient : patientList){
+            if(!curPatient.getDeathdate().equals("")){
+                continue;
+            }
+            if(getAge(curPatient) > maxAge){
+                maxAge = getAge(curPatient);
+            }
+        }
+        if(maxAge == -1){
+            return 0;
+        }
+        return maxAge;
     }
 
 
