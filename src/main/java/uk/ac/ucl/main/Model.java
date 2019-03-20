@@ -1,4 +1,4 @@
-package uk.ac.ucl;
+package uk.ac.ucl.main;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

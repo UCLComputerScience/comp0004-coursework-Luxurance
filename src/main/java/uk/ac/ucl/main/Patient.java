@@ -1,4 +1,4 @@
-package uk.ac.ucl;
+package uk.ac.ucl.main;
 
 public class Patient{
     private String id;
@@ -76,11 +76,11 @@ public class Patient{
     }
 
     public String getFirst() {
-        return first;
+        return first.replaceAll("[0-9]","");
     }
 
     public String getLast() {
-        return last;
+        return last.replaceAll("[0-9]","");
     }
 
     public String getSuffix() {

@@ -1,10 +1,9 @@
-package uk.ac.ucl;
+package uk.ac.ucl.main;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 public class WriteCSV {
