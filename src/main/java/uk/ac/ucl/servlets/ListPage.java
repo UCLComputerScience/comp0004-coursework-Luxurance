@@ -1,0 +1,26 @@
+package uk.ac.ucl.servlets;
+
+import uk.ac.ucl.main.Model;
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+
+@WebServlet("/list_page")
+public class ListPage extends HttpServlet
+{
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException
+    {
+        // Code to use the model to process something would go here.
+        Model model = new Model();
+        model.readCSVFile("/Users/Lance 1 2/IdeaProjects/patient_data_web/patient_data/patients100.csv");
+        request.setAttribute("patientList",model.getPatientList());
+        // Then forward to JSP.
+        ServletContext context = getServletContext();
+        RequestDispatcher dispatch = context.getRequestDispatcher("/displayList.jsp");
+        dispatch.forward(request, response);
+    }
+}
