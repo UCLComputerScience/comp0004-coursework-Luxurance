@@ -174,5 +174,14 @@ public class Model {
         return maxAge;
     }
 
+    public Patient searchById(String id){
+        for(Patient patient : patientList){
+            if(patient.getId().equals(id)){
+                return patient;
+            }
+        }
+        return null;
+    }
+
 
 }

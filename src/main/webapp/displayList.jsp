@@ -14,13 +14,21 @@
 </head>
 <body>
     <h1 align="center"> Patient List </h1>
-
-    <%
-    for(Patient patient : (List<Patient>)request.getAttribute("patientList")){
-    %>
-        <p align="center"> <%= patient.getFirst()+" "+patient.getLast()%> </p>
-    <%
-    }
-    %>
+    <a href="/list_page"><strong><-</strong>Back</a><br>
+        <div id="menu" style="background-color:#C0C0C0;width:300px;text-align: center;float: left">
+            <p><strong>Patient Name</strong></p>
+            <%for(Patient patient : (List<Patient>)request.getAttribute("patientList")){%>
+            <a align="center" href="list_page?action=<%=patient.getId()%>"> <%= patient.getFirst()+" "+patient.getLast()%> </a><br>
+            <%}%>
+        </div>
+        <div id="content" style="background-color:#EEEEEE;width:750px;text-align: left;float: right">
+            <%if(request.getAttribute("patientInfo") != null){%>
+            <%for(String infoString : (List<String>)request.getAttribute("patientInfo")){%>
+            <kbd><%=infoString%></kbd><br>
+            <%}%>
+            <%}else{%>
+            <kbd>Patient information will be display here if selected.</kbd><br>
+            <%}%>
+        </div>
 </body>
 </html>
