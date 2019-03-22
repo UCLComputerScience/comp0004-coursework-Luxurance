@@ -183,5 +183,15 @@ public class Model {
         return null;
     }
 
+    public List<Patient> searchByStartLetter(String letter){
+        List<Patient> matchedList = new ArrayList<>();
+        for(Patient patient : patientList){
+            if(patient.getFirst().startsWith(letter)){
+                matchedList.add(patient);
+            }
+        }
+        return matchedList;
+    }
+
 
 }

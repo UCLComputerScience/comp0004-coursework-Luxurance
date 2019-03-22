@@ -21,10 +21,16 @@ public class ListPage extends HttpServlet
             model.readCSVFile("/Users/Lance 1 2/IdeaProjects/patient_data_web/patient_data/patients100.csv");
             request.setAttribute("patientList", model.getPatientList());
 
-            Patient patient = model.searchById(request.getParameter("action"));
+            Patient patient = model.searchById(request.getParameter("patientSelected"));
             if(patient != null) {
                 request.setAttribute("patientInfo", model.getPatientInfo(patient));
             }
+
+            String letter = request.getParameter("letterSelected");
+            if(letter != null) {
+                request.setAttribute("patientList", model.searchByStartLetter(letter));
+            }
+
             // Then forward to JSP.
             ServletContext context = getServletContext();
             RequestDispatcher dispatch = context.getRequestDispatcher("/displayList.jsp");

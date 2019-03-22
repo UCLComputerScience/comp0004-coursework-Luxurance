@@ -17,8 +17,12 @@
     <a href="/list_page"><strong><-</strong>Back</a><br>
         <div id="menu" style="background-color:#C0C0C0;width:300px;text-align: center;float: left">
             <p><strong>Patient Name</strong></p>
+            <%for(char letter = 'A'; letter <= 'Z'; letter++){%>
+            <%if(letter==('A'+'Z')/2){%><br><%}%>
+            <a href="list_page?letterSelected=<%=letter%>" ><%=letter%></a>
+            <%}%><br><br>
             <%for(Patient patient : (List<Patient>)request.getAttribute("patientList")){%>
-            <a align="center" href="list_page?action=<%=patient.getId()%>"> <%= patient.getFirst()+" "+patient.getLast()%> </a><br>
+            <a align="center" href="list_page?patientSelected=<%=patient.getId()%>"> <%= patient.getFirst()+" "+patient.getLast()%> </a><br>
             <%}%>
         </div>
         <div id="content" style="background-color:#EEEEEE;width:750px;text-align: left;float: right">
