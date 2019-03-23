@@ -9,8 +9,8 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-//@WebServlet("/showPatientList")
-public class showPatientList extends HttpServlet
+//@WebServlet("/ShowPatientList")
+public class ShowPatientList extends HttpServlet
 {
     private Model model;
 
@@ -44,6 +44,10 @@ public class showPatientList extends HttpServlet
             Patient patient = model.searchById(request.getParameter("patientSelected"));
             if(patient != null) {
                 patientInfo = model.getPatientInfo(patient);
+            }
+
+            if(request.getParameter("lastName") != null) {
+                patientList = model.searchPatient(request.getParameter("lastName"));
             }
 
             request.setAttribute("patientList",patientList);

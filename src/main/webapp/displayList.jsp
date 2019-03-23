@@ -14,13 +14,18 @@
 </head>
 <body>
     <h1 align="center"> Patient List </h1>
-    <a href="/showPatientList/"><strong><-</strong>Back</a><br>
         <div id="menu" style="background-color:#C0C0C0;width:300px;text-align: center;float: left">
+            <a href="/showPatientList/"><strong><-</strong>Back</a><br>
             <p><strong>Patient Name</strong></p>
             <%for(char letter = 'A'; letter <= 'Z'; letter++){%>
             <%if(letter==('A'+'Z')/2){%><br><%}%>
             <a href="/showPatientList/letter?letterSelected=<%=letter%>"><%=letter%></a>
             <%}%><br><br>
+            <form action="/showPatientList/search" method="post">
+                Search by last name:<br><br>
+                <input type="text" name="lastName">
+                <input type="submit" value="Submit">
+            </form>
             <%for(Patient patient : (List<Patient>)request.getAttribute("patientList")){%>
             <a align="center" href="/showPatientList/name?patientSelected=<%=patient.getId()%>"> <%= patient.getFirst()+" "+patient.getLast()%> </a><br>
             <%}%>

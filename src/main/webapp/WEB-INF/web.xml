@@ -6,11 +6,11 @@ version="2.4">
     <display-name>PatientData</display-name>
     <description>Patient Data</description>
     <servlet>
-        <servlet-name>showPatientList</servlet-name>
-        <servlet-class>uk.ac.ucl.servlets.showPatientList</servlet-class>
+        <servlet-name>ShowPatientList</servlet-name>
+        <servlet-class>uk.ac.ucl.servlets.ShowPatientList</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>showPatientList</servlet-name>
+        <servlet-name>ShowPatientList</servlet-name>
         <url-pattern>/showPatientList/*</url-pattern>
     </servlet-mapping>
 </web-app>
