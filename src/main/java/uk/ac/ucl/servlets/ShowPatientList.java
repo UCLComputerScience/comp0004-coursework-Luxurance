@@ -32,7 +32,7 @@ public class ShowPatientList extends HttpServlet
         System.out.println(url);
         String[] urlEle = url.split("/");
         System.out.println(urlEle.length);
-        if(urlEle.length == 2){
+        if(urlEle.length == 2 || patientList == null){
             initialise(request,response);
         }
         else {
@@ -139,6 +139,9 @@ public class ShowPatientList extends HttpServlet
     }
 
     private void getCount(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+        if(request.getParameter("statsLower") == "" || request.getParameter("statsUpper") == ""){
+            return;
+        }
         request.setAttribute("patientCount",model.countByAgeRange(patientList,
                 Integer.valueOf(request.getParameter("statsLower")),
                 Integer.valueOf(request.getParameter("statsUpper"))));
