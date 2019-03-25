@@ -22,9 +22,14 @@
             <a href="/showPatientList/letter?letterSelected=<%=letter%>"><%=letter%></a>
             <%}%><br><br>
             <form action="/showPatientList/search" method="post">
-                Search by last name:<br><br>
-                <input type="text" name="lastName">
-                <input type="submit" value="Submit">
+                Search by<br><br>
+                gender: <input type="radio" name="gender" value="Male">Male
+                <input type="radio" name="gender" value="Female">Female<br>
+                age: from<input type="number" name="lowerAge" min="0" max="150">
+                to<input type="number" name="upperAge" min="0" max="150"><br>
+                name:<input type="text" name="name"><br>
+                city:<input type="text" name="city"><br><br>
+                <input type="submit" value="Apply">
             </form>
             <%for(Patient patient : (List<Patient>)request.getAttribute("patientList")){%>
             <a align="center" href="/showPatientList/name?patientSelected=<%=patient.getId()%>"> <%= patient.getFirst()+" "+patient.getLast()%> </a><br>

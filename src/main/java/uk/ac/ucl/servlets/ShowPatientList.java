@@ -42,7 +42,7 @@ public class ShowPatientList extends HttpServlet
                 showInfo(request,response);
                 break;
             case "search":
-                searchByLastName(request,response);
+                mutipleSearch(request,response);
         }
 
         request.setAttribute("patientList",patientList);
@@ -85,8 +85,25 @@ public class ShowPatientList extends HttpServlet
 
     private void searchByLastName(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException{
-        if(request.getParameter("lastName") != null) {
+        if(request.getParameter("lastName").equals("")) {
             patientList = model.searchPatient(request.getParameter("lastName"));
+        }
+    }
+
+    private void mutipleSearch(HttpServletRequest request, HttpServletResponse response){
+        patientList = model.getPatientList();
+        if(request.getParameter("gender") != null){
+            this.patientList = model.searchByGender(patientList,Character.toString(request.getParameter("gender").charAt(0)));
+        }
+        if((request.getParameter("lowerAge") != "") && (request.getParameter("upperAge") != "")){
+            this.patientList = model.searchByAgeRange(patientList,Integer.valueOf(request.getParameter("upperAge")),
+                    Integer.valueOf(request.getParameter("lowerAge")));
+        }
+        if(request.getParameter("name") != null) {
+            this.patientList = model.searchByName(patientList,request.getParameter("name"));
+        }
+        if(request.getParameter("city") != null){
+            this.patientList = model.searchByCity(patientList,request.getParameter("city"));
         }
     }
 }

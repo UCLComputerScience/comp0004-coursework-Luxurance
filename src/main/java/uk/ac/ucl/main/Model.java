@@ -117,9 +117,9 @@ public class Model {
     public List<Patient> searchPatient(String keyWord){
         List<Patient> matchedPatients = new ArrayList<>();
         for(Patient curPatient : patientList){
-            if(curPatient.getFirst().contains(keyWord) || curPatient.getLast().contains(keyWord) ||
-                    curPatient.getId().contains(keyWord) ||
-                    (curPatient.getFirst().replaceAll("[0-9]","")+" "+curPatient.getLast()).contains(keyWord)){
+            if(curPatient.getFirst().toLowerCase().contains(keyWord.toLowerCase()) || curPatient.getLast().toLowerCase().contains(keyWord.toLowerCase()) ||
+                    curPatient.getId().toLowerCase().contains(keyWord.toLowerCase()) ||
+                    (curPatient.getFirst().replaceAll("[0-9]","")+" "+curPatient.getLast()).toLowerCase().contains(keyWord.toLowerCase())){
                 matchedPatients.add(curPatient);
             }
         }
@@ -193,5 +193,45 @@ public class Model {
         return matchedList;
     }
 
+    public List<Patient> searchByGender(List<Patient> patientList, String gender){
+        List<Patient> matchedList = new ArrayList<>();
+        for(Patient patient : patientList){
+            if(patient.getGender().equals(gender)){
+                matchedList.add(patient);
+            }
+        }
+        return matchedList;
+    }
+
+    public List<Patient> searchByAgeRange(List<Patient> patientList, int upper, int lower){
+        List<Patient> matchedList = new ArrayList<>();
+        for(Patient patient : patientList) {
+            if (getAge(patient) >= lower && getAge(patient) <= upper) {
+                matchedList.add(patient);
+            }
+        }
+        return matchedList;
+    }
+
+    public List<Patient> searchByCity(List<Patient> patientList, String city){
+        List<Patient> matchedList = new ArrayList<>();
+        for(Patient patient : patientList){
+            if(city.toLowerCase().equals(patient.getCity().toLowerCase())){
+                matchedList.add(patient);
+            }
+        }
+        return matchedList;
+    }
+
+    public List<Patient> searchByName(List<Patient> patientList, String name){
+        List<Patient> matchedList = new ArrayList<>();
+        for(Patient patient : patientList){
+            if((patient.getFirst().toLowerCase()+" "
+                    +patient.getLast()).toLowerCase().contains(name.toLowerCase())){
+                matchedList.add(patient);
+            }
+        }
+        return matchedList;
+    }
 
 }
