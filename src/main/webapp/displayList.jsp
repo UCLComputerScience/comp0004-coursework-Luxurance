@@ -15,7 +15,8 @@
 <body>
     <h1 align="center"> Patient List </h1>
         <div id="menu" style="background-color:#C0C0C0;width:300px;text-align: center;float: left">
-            <a href="/showPatientList/"><strong><-</strong>Back</a><br>
+            <a href="/showPatientList/"><strong><-</strong>Back</a>&nbsp;&nbsp;&nbsp;
+            <a href="/showPatientList/statistics" target="_blank">Show Stats.</a><br>
             <p><strong>Patient Name</strong></p>
             <%for(char letter = 'A'; letter <= 'Z'; letter++){%>
             <%if(letter==('A'+'Z')/2){%><br><%}%>

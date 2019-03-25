@@ -6,7 +6,6 @@ import uk.ac.ucl.main.Patient;
 import java.io.*;
 import java.util.List;
 import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 //@WebServlet("/ShowPatientList")
@@ -17,6 +16,8 @@ public class ShowPatientList extends HttpServlet
     private List<Patient> patientList = null;
 
     private List<String> patientInfo = null;
+
+    private int meanAge, youngest, eldest;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -34,15 +35,30 @@ public class ShowPatientList extends HttpServlet
         if(urlEle.length == 2){
             initialise(request,response);
         }
-        switch (urlEle[urlEle.length-1]){
-            case "letter":
-                sortByLetter(request,response);
-                break;
-            case "name":
-                showInfo(request,response);
-                break;
-            case "search":
-                mutipleSearch(request,response);
+        else {
+            switch (urlEle[2]) {
+                case "letter":
+                    sortByLetter(request, response);
+                    break;
+                case "name":
+                    showInfo(request, response);
+                    break;
+                case "search":
+                    mutipleSearch(request, response);
+                    break;
+                case "statistics":
+                    if (urlEle.length == 3) {
+                        showStats(request, response);
+                    }
+                    if (urlEle[urlEle.length - 1].equals("getNumber")) {
+                        getCount(request,response);
+                    }
+                    request.setAttribute("meanAge",meanAge);
+                    request.setAttribute("youngest",youngest);
+                    request.setAttribute("eldest",eldest);
+                    toStatsPage(request,response);
+                    return;
+            }
         }
 
         request.setAttribute("patientList",patientList);
@@ -50,13 +66,19 @@ public class ShowPatientList extends HttpServlet
         request.setAttribute("patientInfo",patientInfo);
 
         // Then forward to JSP.
-        toJSP(request,response);
+        toDisplayList(request,response);
     }
 
 
-    private void toJSP(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+    private void toDisplayList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         ServletContext context = getServletContext();
         RequestDispatcher dispatch = context.getRequestDispatcher("/displayList.jsp");
+        dispatch.forward(request, response);
+    }
+
+    private void toStatsPage(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+        ServletContext context = getServletContext();
+        RequestDispatcher dispatch = context.getRequestDispatcher("/showStats.jsp");
         dispatch.forward(request, response);
     }
 
@@ -99,11 +121,26 @@ public class ShowPatientList extends HttpServlet
             this.patientList = model.searchByAgeRange(patientList,Integer.valueOf(request.getParameter("upperAge")),
                     Integer.valueOf(request.getParameter("lowerAge")));
         }
-        if(request.getParameter("name") != null) {
+        if(!request.getParameter("name").equals("")) {
             this.patientList = model.searchByName(patientList,request.getParameter("name"));
         }
-        if(request.getParameter("city") != null){
+        if(!request.getParameter("city").equals("")){
             this.patientList = model.searchByCity(patientList,request.getParameter("city"));
         }
+    }
+
+    private void showStats(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+        if(patientList == null){
+            return;
+        }
+        meanAge = model.getMeanAge(patientList);
+        youngest = model.getYoungest(patientList);
+        eldest = model.getEldest(patientList);
+    }
+
+    private void getCount(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+        request.setAttribute("patientCount",model.countByAgeRange(patientList,
+                Integer.valueOf(request.getParameter("statsLower")),
+                Integer.valueOf(request.getParameter("statsUpper"))));
     }
 }

@@ -234,4 +234,15 @@ public class Model {
         return matchedList;
     }
 
+    public int countByAgeRange(List<Patient> patientList, int lower, int upper){
+        int count = 0;
+        for(Patient patient : patientList){
+            int age = getAge(patient);
+            if(age >= lower && age <= upper){
+                count++;
+            }
+        }
+        return count;
+    }
+
 }
