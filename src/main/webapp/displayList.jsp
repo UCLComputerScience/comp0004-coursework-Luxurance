@@ -19,8 +19,8 @@
             <a href="/showPatientList/statistics" target="_blank">Show Stats.</a><br>
             <p><strong>Patient Name</strong></p>
             <%for(char letter = 'A'; letter <= 'Z'; letter++){%>
-            <%if(letter==('A'+'Z')/2){%><br><%}%>
-            <a href="/showPatientList/letter?letterSelected=<%=letter%>"><%=letter%></a>
+                <%if(letter==('A'+'Z')/2){%><br><%}%>
+                <a href="/showPatientList/letter?letterSelected=<%=letter%>"><%=letter%></a>
             <%}%><br><br>
             <form action="/showPatientList/search" method="post">
                 Search by<br><br>
@@ -33,16 +33,23 @@
                 <input type="submit" value="Apply">
             </form>
             <%for(Patient patient : (List<Patient>)request.getAttribute("patientList")){%>
-            <a align="center" href="/showPatientList/name?patientSelected=<%=patient.getId()%>"> <%= patient.getFirst()+" "+patient.getLast()%> </a><br>
+                <a align="center" href="/showPatientList/name?patientSelected=<%=patient.getId()%>">
+                <%= patient.getFirst()+" "+patient.getLast()%> </a><br>
             <%}%>
         </div>
         <div id="content" style="background-color:#EEEEEE;width:750px;text-align: left;float: right">
+            <form action="/showPatientList/uploadFile" enctype="multipart/form-data" method="post">
+                <input type="file" name="uploadFile" value="select CSV file">
+                <input type="submit" value="upload">
+                <strong>Upload CSV file please.</strong><br>
+                <strong>The upload is for displaying various patients lists.</strong>
+            </form>
             <%if(request.getAttribute("patientInfo") != null){%>
-            <%for(String infoString : (List<String>)request.getAttribute("patientInfo")){%>
-            <kbd><%=infoString%></kbd><br>
-            <%}%>
+                <%for(String infoString : (List<String>)request.getAttribute("patientInfo")){%>
+                    <kbd><%=infoString%></kbd><br>
+                <%}%>
             <%}else{%>
-            <kbd>Patient information will be display here if selected.</kbd><br>
+                <kbd>Patient information will be display here if selected.</kbd><br>
             <%}%>
         </div>
 </body>

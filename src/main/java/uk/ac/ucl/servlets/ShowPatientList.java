@@ -1,5 +1,11 @@
 package uk.ac.ucl.servlets;
 
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.apache.tomcat.util.http.fileupload.RequestContext;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
 import uk.ac.ucl.main.Model;
 import uk.ac.ucl.main.Patient;
 
@@ -58,6 +64,9 @@ public class ShowPatientList extends HttpServlet
                     request.setAttribute("eldest",eldest);
                     toStatsPage(request,response);
                     return;
+                case "uploadFile":
+                    uploadFile(request,response);
+                    break;
             }
         }
 
@@ -145,5 +154,28 @@ public class ShowPatientList extends HttpServlet
         request.setAttribute("patientCount",model.countByAgeRange(patientList,
                 Integer.valueOf(request.getParameter("statsLower")),
                 Integer.valueOf(request.getParameter("statsUpper"))));
+    }
+
+    private void uploadFile(HttpServletRequest request, HttpServletResponse response) {
+//        System.out.println(request.getServletContext().getContextPath());
+        try {
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            List<FileItem> fileList = upload.parseRequest(new ServletRequestContext(request));
+            if (fileList.size() != 1) {
+                System.out.println("fileNum"+fileList.size());
+            }
+            String filePath = "/Users/Lance 1 2/IdeaProjects/patient_data_web/patient_data/temp.csv";
+            fileList.get(0).write(new File(filePath));
+            model.readCSVFile(filePath);
+            patientList = model.getPatientList();
+            System.out.println(patientList.size());
+        }
+        catch (FileUploadException e1){
+            e1.printStackTrace();
+        }
+        catch (Exception e2){
+            e2.printStackTrace();
+        }
     }
 }

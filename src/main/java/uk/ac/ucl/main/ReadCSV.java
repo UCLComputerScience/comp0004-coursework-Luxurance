@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.IllegalFormatException;
 import java.util.List;
 
 public class ReadCSV {
@@ -18,8 +19,8 @@ public class ReadCSV {
         lineReader = new BufferedReader(reader);
         String content = lineReader.readLine();
         boolean first = true;
-        while(content != null){
-            if(first) content = lineReader.readLine(); // skip the title line
+        while (content != null) {
+            if (first) content = lineReader.readLine(); // skip the title line
             first = false;
             Patient curPatient = new Patient();
             String[] patientDetails = content.split(",");
@@ -44,15 +45,13 @@ public class ReadCSV {
             curPatient.setCity(patientDetails[17]);
             curPatient.setState(patientDetails[18]);
             // ensure the last element can be read even if it is empty
-            if(patientDetails.length == 20) {
+            if (patientDetails.length == 20) {
                 curPatient.setZip(patientDetails[19]);
-            }
-            else{
+            } else {
                 curPatient.setZip("");
             }
             patientList.add(curPatient);
             content = lineReader.readLine();
-
         }
         lineReader.close();
         return patientList;
