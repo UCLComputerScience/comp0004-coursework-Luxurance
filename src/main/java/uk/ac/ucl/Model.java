@@ -36,7 +36,7 @@ public class Model {
         return curYear - Integer.valueOf(patient.getBirthdate().substring(0,4));
     }
 
-    public void readCSVFile(String path) throws IOException {
+    public void readCSVFile(String path) throws IOException,IllegalAccessException {
         reader = new FileReader(path);
         patientList = readCSV.loadPatient(reader);
         reader.close();
