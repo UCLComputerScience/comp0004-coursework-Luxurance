@@ -33,11 +33,8 @@ public class ShowPatientList extends HttpServlet
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException{
-        // Code to use the model to process something would go here.
         String url = request.getRequestURI();
-        System.out.println(url);
         String[] urlEle = url.split("/");
-        System.out.println(urlEle.length);
         if(urlEle.length == 2 || patientList == null){
             initialise(request,response);
         }
@@ -162,14 +159,10 @@ public class ShowPatientList extends HttpServlet
             DiskFileItemFactory factory = new DiskFileItemFactory();
             ServletFileUpload upload = new ServletFileUpload(factory);
             List<FileItem> fileList = upload.parseRequest(new ServletRequestContext(request));
-            if (fileList.size() != 1) {
-                System.out.println("fileNum"+fileList.size());
-            }
             String filePath = "/Users/Lance 1 2/IdeaProjects/patient_data_web/patient_data/temp.csv";
             fileList.get(0).write(new File(filePath));
             model.readCSVFile(filePath);
             patientList = model.getPatientList();
-            System.out.println(patientList.size());
         }
         catch (FileUploadException e1){
             e1.printStackTrace();
